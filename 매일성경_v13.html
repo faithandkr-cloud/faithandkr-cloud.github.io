@@ -186,8 +186,8 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 }
 .card-hd {
   background: linear-gradient(90deg, var(--gold), var(--gold-lt));
-  padding: 4px 16px;
-  min-height: 40px;
+  padding: 8px 16px;
+  min-height: 52px;
   display: flex; align-items: center; justify-content: space-between; gap: 6px;
   position: sticky;
   top: var(--datebar-h, 44px);
@@ -200,7 +200,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   flex: 0 0 auto;
   width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(16,29,46,.15);
+  background: transparent;
   border: none; border-radius: 8px;
   font-size: 1.3rem; font-weight: 800; line-height: 1;
   color: var(--navy-dk);
@@ -215,12 +215,12 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .card-hd-title { font-size: .95rem; font-weight: 700; color: var(--navy-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-hd-badge {
   font-size: .65rem; font-weight: 700;
-  background: rgba(16,29,46,.25);
+  background: transparent;
   color: var(--navy-dk);
   padding: 2px 8px; border-radius: 10px;
   border: none; cursor: pointer; font-family: inherit;
 }
-.card-hd-badge:hover { background: rgba(16,29,46,.4); }
+.card-hd-badge:hover { background: rgba(16,29,46,.15); }
 .card-body { padding: 12px 8px 12px 4px; }
 .verse-book-title {
   font-size: .78rem;
@@ -299,8 +299,8 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   overflow: hidden;
 }
 .ai-hd {
-  padding: 12px 16px;
-  min-height: 60px;
+  padding: 8px 16px;
+  min-height: 52px;
   background: linear-gradient(90deg, var(--gold), var(--gold-lt));
   display: flex; align-items: center; justify-content: space-between;
 }
@@ -311,7 +311,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 }
 .ai-badge.gemini  { background: rgba(66,133,244,.2);  color: #2f5db8; border: 1px solid rgba(66,133,244,.3); }
 .ai-badge.mistral { background: rgba(255,121,0,.15);  color: #b85e00; border: 1px solid rgba(255,121,0,.3); }
-.ai-hd-title { font-size: .88rem; color: var(--navy-dk); font-weight: 700; }
+.ai-hd-title { font-size: .95rem; color: var(--navy-dk); font-weight: 700; letter-spacing: .2px; }
 .btn-refresh {
   background: rgba(16,29,46,.12); border: 1px solid rgba(16,29,46,.25);
   border-radius: 6px; padding: 3px 9px;
@@ -327,6 +327,15 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   cursor: pointer; transition: all .2s; font-weight: 600;
 }
 .btn-goto:hover { background: rgba(16,29,46,.25); }
+.btn-goto-circle {
+  width: 34px; height: 34px; padding: 0;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(16,29,46,.12); border: 1px solid rgba(16,29,46,.25);
+  color: var(--navy-dk); font-size: 1.05rem;
+  cursor: pointer; transition: all .2s;
+}
+.btn-goto-circle:hover { background: rgba(16,29,46,.25); }
 .ai-body { padding: 18px; }
 .ai-text {
   font-size: .95rem; line-height: 1.9;
@@ -360,8 +369,8 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 }
 .med-hd {
   background: linear-gradient(90deg, var(--gold), var(--gold-lt));
-  padding: 12px 18px;
-  min-height: 60px;
+  padding: 8px 18px;
+  min-height: 52px;
   display: flex; align-items: center; gap: 10px;
 }
 .med-hd-icon { font-size: 1.1rem; }
@@ -372,6 +381,18 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 }
 .med-item {}
 .med-item-body { min-width: 0; }
+.med-item-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+  padding: 8px 10px;
+  background: rgba(154,123,53,.08);
+  border: 1px solid rgba(154,123,53,.25);
+  border-radius: 8px;
+}
+.med-item-toggle:hover { background: rgba(154,123,53,.15); }
+.med-item-toggle .med-q-text { margin-bottom: 0; }
+.med-toggle-arrow { font-size: .8rem; color: var(--gold-ink); flex-shrink: 0; margin-left: 8px; }
+.med-item-collapse { margin-top: 10px; }
 .med-q-text {
   font-family: Georgia, 'Nanum Myeongjo', 'Batang', serif;
   font-style: italic;
@@ -381,15 +402,11 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .med-textarea {
   width: 100%;
   background-color: rgba(255,255,255,.4);
-  background-image: repeating-linear-gradient(
-    var(--paper) 0, var(--paper) 26px,
-    rgba(154,123,53,.3) 27px
-  );
   border: 1px solid rgba(154,123,53,.3);
   border-radius: 8px; color: var(--ink);
-  font-size: .9rem; padding: 10px 12px 0;
+  font-size: .9rem; padding: 10px 12px;
   font-family: inherit; resize: none; min-height: 90px;
-  outline: none; line-height: 27px;
+  outline: none; line-height: 1.6;
   transition: border-color .2s, box-shadow .2s;
 }
 .med-textarea:focus { border-color: var(--gold-ink); box-shadow: 0 0 0 3px rgba(154,123,53,.15); }
@@ -411,15 +428,15 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   display: block; margin: 6px 0;
 }
 .med-footer {
-  padding: 16px 18px 20px;
-  display: flex; gap: 8px;
+  padding: 14px 18px 18px;
+  display: flex; gap: 6px;
   justify-content: center;
 }
 .btn-med-save {
-  flex: 0 0 auto; width: 88px; padding: 9px 0;
+  flex: 0 0 auto; width: 70px; padding: 6px 0;
   background: linear-gradient(90deg, var(--gold), var(--gold-lt));
   border: none; border-radius: 999px;
-  color: var(--navy-dk); font-size: .85rem; font-weight: 700;
+  color: var(--navy-dk); font-size: .72rem; font-weight: 700;
   letter-spacing: .3px;
   cursor: pointer; transition: transform .15s, box-shadow .15s;
   box-shadow: 0 3px 12px rgba(154,123,53,.4);
@@ -427,20 +444,20 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .btn-med-save:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(154,123,53,.5); }
 .btn-med-save:active { transform: translateY(0); }
 .btn-med-share {
-  flex: 0 0 auto; width: 88px; padding: 9px 0;
+  flex: 0 0 auto; width: 70px; padding: 6px 0;
   background: rgba(74,155,111,.1);
   border: 1px solid rgba(74,155,111,.35);
   border-radius: 999px;
-  color: var(--green); font-size: .85rem; font-weight: 600;
+  color: var(--green); font-size: .72rem; font-weight: 600;
   cursor: pointer; transition: all .2s;
 }
 .btn-med-share:hover { background: rgba(74,155,111,.2); }
 .btn-med-clear {
-  flex: 0 0 auto; width: 88px; padding: 9px 0;
+  flex: 0 0 auto; width: 70px; padding: 6px 0;
   background: transparent;
   border: 1px solid rgba(43,32,19,.2);
   border-radius: 999px;
-  color: var(--ink-dim); font-size: .85rem; font-weight: 600;
+  color: var(--ink-dim); font-size: .72rem; font-weight: 600;
   cursor: pointer; transition: all .2s;
 }
 .btn-med-clear:hover { background: rgba(43,32,19,.07); border-color: rgba(43,32,19,.35); }
@@ -679,7 +696,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── 절번호 정렬 ── */
 .verse-text { font-size: 15px; line-height: 1.75; color: var(--ink); }
-.vline { display: flex; gap: 8px; margin-bottom: 4px; align-items: flex-start; }
+.vline { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-start; }
 .vnum  { min-width: 22px; font-size: .8em; color: var(--gold-ink);
          font-weight: 700; padding-top: 2px; flex-shrink: 0; text-align: right; }
 .vtxt  { flex: 1; }
@@ -700,7 +717,9 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   color: var(--navy-dk); cursor: pointer;
   background: rgba(16,29,46,.15);
   border: 1px solid rgba(16,29,46,.3);
-  border-radius: 4px; padding: 2px 6px;
+  border-radius: 50%;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
   user-select: none;
 }
 .font-ctrl:hover { background: rgba(16,29,46,.3); }
@@ -1389,8 +1408,8 @@ function getVerseText(dateKey, qt) {
 // 로드된 번역본: { label, name2num, verses }
 // localStorage에는 추출된 content만 저장 (전체 DB 저장 X — 너무 큼)
 const VERSIONS = [
-  { id:'개역개정',   label:'개역',   icon:'🇰🇷' },
-  { id:'우리말성경', label:'우리',   icon:'📖' },
+  { id:'개역개정',   label:'개역개정',   icon:'🇰🇷' },
+  { id:'우리말성경', label:'우리말',   icon:'📖' },
   { id:'NIV',        label:'NIV',    icon:'🇺🇸' },
 ];
 let loadedDBs = {}; // id → { name2num, verses }
@@ -1905,8 +1924,8 @@ function renderCommPanel() {
           <span class="ai-hd-title">💡 오늘의 묵상 해설</span>
         </div>
         <div class="ai-hd-right">
-          <button class="btn-goto" onclick="switchTab('exeg')">🔎 주석 보기</button>
-          <button class="btn-refresh" onclick="refreshCommentary()">↺ 새로 생성</button>
+          <button class="btn-goto-circle" onclick="switchTab('exeg')" title="주석 보기">🔎</button>
+          <button class="btn-goto-circle" onclick="refreshCommentary()" title="새로 생성">↺</button>
         </div>
       </div>
       <div class="ai-body">
@@ -2005,8 +2024,8 @@ function renderExegesisPanel() {
           <span class="ai-hd-title">🔎 본문해석</span>
         </div>
         <div class="ai-hd-right">
-          <button class="btn-goto" onclick="switchTab('comm')">💡 해설 보기</button>
-          <button class="btn-refresh" onclick="refreshExegesis()">↺ 새로 생성</button>
+          <button class="btn-goto-circle" onclick="switchTab('comm')" title="해설 보기">💡</button>
+          <button class="btn-goto-circle" onclick="refreshExegesis()" title="새로 생성">↺</button>
         </div>
       </div>
       <div class="ai-body">
@@ -2073,9 +2092,9 @@ async function fetchExegesis(dateKey, todayData) {
 
 // ── 묵상 패널 ──
 const MED_QUESTIONS = [
-  { key:'q1', label:'1', q:'하나님은 누구십니까?',          ph:'이 본문에서 하나님(예수님, 성령님)은 어떤 분으로 나타나 있나요?', cls:'' },
-  { key:'q2', label:'2', q:'읽고 느낀 점을 쓰세요.',        ph:'오늘 말씀을 읽으며 마음에 와 닿은 것, 도전받은 것을 적어보세요.', cls:'' },
-  { key:'q3', label:'3', q:'기도문을 작성하고 기도해요.',   ph:'오늘 말씀을 붙들고 드리는 기도를 적어보세요...', cls:'prayer',
+  { key:'q1', label:'1', q:'하나님은 누구십니까?',          ph:'이 본문에서 하나님(예수님, 성령님)은 어떤 분으로 나타나 있나요?', cls:'', minHeight:140 },
+  { key:'q2', label:'2', q:'읽고 느낀 점을 쓰세요.',        ph:'오늘 말씀을 읽으며 마음에 와 닿은 것, 도전받은 것을 적어보세요.', cls:'', minHeight:140 },
+  { key:'q3', label:'3', q:'기도문을 작성하고 기도해요.',   ph:'오늘 말씀을 붙들고 드리는 기도를 적어보세요...', cls:'prayer', collapsible:true,
     example: `<b>시편 121편 묵상 예)</b><br>
 <span class="ex-quote">"하나님이 재권에게 말한다. 나는 천지를 지은 여호와다. 한번 산을 향하여 눈을 들어봐라. 너의 도움이 어디서 온다고 생각하니? 바로 천지를 지은 바로 나로부터 나온다. 그러니 재권아, 나만 의지해라. 난 너의 도움이 될 것이다. 너의 피난처가 될 것이다. 두려워하지 마라. 걱정하지 마라..."</span>
 하나님이 나에게 하시는 말씀처럼, 본문을 자신의 이름을 넣어 한번 자신을 향하여 조용히 읽어보는 시간을 가져보세요.` },
@@ -2100,13 +2119,26 @@ function renderMedPanel() {
         <span class="med-hd-title">오늘 묵상 — ${todayData.title}</span>
       </div>
       <div class="med-body">
-        ${MED_QUESTIONS.map(mq => `
+        ${MED_QUESTIONS.map(mq => mq.collapsible ? `
+          <div class="med-item">
+            <div class="med-item-toggle" onclick="toggleMedItem('${mq.key}')">
+              <span class="med-q-text">${mq.q}</span>
+              <span class="med-toggle-arrow" id="medArrow_${mq.key}">▾</span>
+            </div>
+            <div class="med-item-collapse" id="medCollapse_${mq.key}" style="display:none;">
+              ${mq.example ? `<div class="med-example">${mq.example}</div>` : ''}
+              <textarea class="med-textarea ${mq.cls}" id="medAns_${mq.key}"
+                placeholder="${mq.ph}"
+                oninput="autoResize(this)">${LS.get(medKey+'_'+mq.key, '')}</textarea>
+            </div>
+          </div>` : `
           <div class="med-item">
             <div class="med-item-body">
               <div class="med-q-text">${mq.q}</div>
               ${mq.example ? `<div class="med-example">${mq.example}</div>` : ''}
               <textarea class="med-textarea ${mq.cls}" id="medAns_${mq.key}"
                 placeholder="${mq.ph}"
+                style="${mq.minHeight ? `min-height:${mq.minHeight}px;` : ''}"
                 oninput="autoResize(this)">${LS.get(medKey+'_'+mq.key, '')}</textarea>
             </div>
           </div>`).join('')}
@@ -2118,11 +2150,25 @@ function renderMedPanel() {
       </div>
     </div>`;
 
-  // 텍스트영역 높이 자동 조정
+  // 텍스트영역 높이 자동 조정 (접힌 항목은 펼칠 때 조정)
   MED_QUESTIONS.forEach(mq => {
+    if (mq.collapsible) return;
     const el = document.getElementById('medAns_'+mq.key);
     if (el) autoResize(el);
   });
+}
+
+function toggleMedItem(key) {
+  const collapse = document.getElementById('medCollapse_'+key);
+  const arrow = document.getElementById('medArrow_'+key);
+  if (!collapse) return;
+  const opening = collapse.style.display === 'none';
+  collapse.style.display = opening ? 'block' : 'none';
+  if (arrow) arrow.textContent = opening ? '▴' : '▾';
+  if (opening) {
+    const ta = document.getElementById('medAns_'+key);
+    if (ta) autoResize(ta);
+  }
 }
 
 function autoResize(el) {
