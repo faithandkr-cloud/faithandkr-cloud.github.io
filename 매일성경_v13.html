@@ -41,23 +41,7 @@ body {
 
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* ── 헤더 ── */
-header {
-  background: linear-gradient(135deg, var(--navy-dk), var(--navy));
-  border-bottom: 1px solid rgba(154,123,53,.4);
-  padding: 12px 16px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  position: sticky; top: 0; z-index: 100;
-}
-.logo { display: flex; align-items: center; gap: 8px; justify-self: center; }
-.header-left { display: flex; align-items: center; justify-self: start; }
-.header-right { justify-self: end; }
-.logo-cross { font-size: 1.5rem; color: var(--gold-lt); }
-.logo-title { font-size: .95rem; font-weight: 700; color: var(--gold-lt); }
-.logo-sub   { font-size: .68rem; color: var(--txt-dim); margin-top: 1px; }
-.header-right { display: flex; align-items: center; gap: 4px; }
+/* ── 상단 툴바 버튼(설정/API 상태) ── */
 .header-qt-btn {
   white-space: nowrap; max-width: none;
   width: 30px; height: 30px; padding: 0;
@@ -99,8 +83,8 @@ header {
   border-bottom: 1px solid rgba(154,123,53,.25);
   padding: 10px 16px 0;
   position: sticky;
-  top: var(--header-h, 56px);
-  z-index: 90;
+  top: 0;
+  z-index: 100;
 }
 #home-btn {
   display: flex; align-items: center; gap: 4px;
@@ -122,6 +106,7 @@ header {
   transition: background .15s, border-color .15s;
 }
 .home-fab:hover { background: rgba(154,123,53,.28); border-color: var(--gold-lt); }
+.qt-fab { right: 72px; font-size: 1.15rem; }
 .date-line {
   display: flex;
   align-items: center;
@@ -205,7 +190,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   min-height: 40px;
   display: flex; align-items: center; justify-content: space-between; gap: 6px;
   position: sticky;
-  top: calc(var(--header-h, 56px) + var(--datebar-h, 44px));
+  top: var(--datebar-h, 44px);
   z-index: 80;
 }
 .card-hd-left { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
@@ -225,7 +210,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .card-hd-nav-btn:active { background: rgba(16,29,46,.45); }
 .card-hd-date { font-size: .66rem; font-weight: 600; color: rgba(16,29,46,.7); margin-bottom: 1px; white-space: nowrap; }
 .card-hd-addr { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; }
-.card-hd-right { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+.card-hd-right { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; position: relative; }
 .card-hd-icon { font-size: 1.1rem; color: var(--navy-dk); flex-shrink: 0; }
 .card-hd-title { font-size: .95rem; font-weight: 700; color: var(--navy-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-hd-badge {
@@ -334,6 +319,14 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   cursor: pointer; transition: all .2s;
 }
 .btn-refresh:hover { background: rgba(16,29,46,.25); }
+.ai-hd-right { display: flex; align-items: center; gap: 6px; }
+.btn-goto {
+  background: rgba(16,29,46,.12); border: 1px solid rgba(16,29,46,.25);
+  border-radius: 6px; padding: 3px 9px;
+  color: var(--navy-dk); font-size: .72rem;
+  cursor: pointer; transition: all .2s; font-weight: 600;
+}
+.btn-goto:hover { background: rgba(16,29,46,.25); }
 .ai-body { padding: 18px; }
 .ai-text {
   font-size: .95rem; line-height: 1.9;
@@ -711,42 +704,39 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   user-select: none;
 }
 .font-ctrl:hover { background: rgba(16,29,46,.3); }
-.font-ctrl-group { display: inline-flex; align-items: center; gap: 6px; }
+.font-ctrl-group {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--cream, #fff);
+  border: 1px solid rgba(16,29,46,.3);
+  border-radius: 6px;
+  padding: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  z-index: 20;
+}
 </style>
 </head>
 <body>
 
-<!-- 헤더 -->
-<header>
-  <div class="header-left">
-    <button class="btn-settings" onclick="openSettings('ai')">☰</button>
-  </div>
-  <div class="logo">
-    <span class="logo-cross">✝</span>
-    <div>
-      <div class="logo-title">오늘의 말씀</div>
-      <div class="logo-sub">은혜가풍성한교회</div>
+<!-- 번역본 + 큐티책 + 탭 -->
+<div class="datebar-wrap">
+  <div class="tab-nav-row">
+    <button class="btn-settings" onclick="openSettings('ai')" title="설정">☰</button>
+    <div class="tab-nav">
+      <button class="tab-btn active" id="tabBtnVerse"     onclick="switchTab('verse')">📖 본문</button>
+      <button class="tab-btn"        id="tabBtnComm"      onclick="switchTab('comm')">💡 해설</button>
+      <button class="tab-btn"        id="tabBtnMed"       onclick="switchTab('med')">✍️ 묵상</button>
     </div>
-  </div>
-  <div class="header-right">
+    <button class="trans-select header-qt-btn" id="tabBtnCal" onclick="switchTab('cal')" title="달력">🗓️</button>
     <div class="api-status" onclick="openSettings('ai')" title="API 연결 상태">
       <div class="led" id="led"></div>
       <span id="led-label">미설정</span>
     </div>
-  </div>
-</header>
-
-<!-- 번역본 + 큐티책 + 탭 -->
-<div class="datebar-wrap">
-  <div class="tab-nav-row">
-    <div class="tab-nav">
-      <button class="tab-btn active" id="tabBtnVerse"     onclick="switchTab('verse')">📖 본문</button>
-      <button class="tab-btn"        id="tabBtnComm"      onclick="switchTab('comm')">💡 해설</button>
-      <button class="tab-btn"        id="tabBtnExeg"      onclick="switchTab('exeg')">🔎 해석</button>
-      <button class="tab-btn"        id="tabBtnMed"       onclick="switchTab('med')">✍️ 묵상</button>
-    </div>
-    <button class="trans-select header-qt-btn" id="tabBtnCal" onclick="switchTab('cal')" title="달력">🗓️</button>
-    <button class="trans-select header-qt-btn" id="qtToggleBtn" onclick="toggleQT()" title="매일성경 (탭하여 전환)">📘</button>
   </div>
 </div>
 
@@ -783,6 +773,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 <!-- 저장 토스트 -->
 <div class="save-toast" id="saveToast">✓ 저장되었습니다</div>
 <button class="home-fab" onclick="goHome()" title="홈으로">🏠</button>
+<button class="home-fab qt-fab" id="qtToggleBtn" onclick="toggleQT()" title="매일성경 (탭하여 전환)">📘</button>
 
 <!-- 설정 모달 -->
 <div class="modal-bg" id="modalBg" onclick="onBgClick(event)">
@@ -1398,9 +1389,9 @@ function getVerseText(dateKey, qt) {
 // 로드된 번역본: { label, name2num, verses }
 // localStorage에는 추출된 content만 저장 (전체 DB 저장 X — 너무 큼)
 const VERSIONS = [
-  { id:'개역개정',   label:'개역개정',   icon:'🇰🇷' },
-  { id:'우리말성경', label:'우리말성경', icon:'📖' },
-  { id:'NIV',        label:'NIV (영어)', icon:'🇺🇸' },
+  { id:'개역개정',   label:'개역',   icon:'🇰🇷' },
+  { id:'우리말성경', label:'우리',   icon:'📖' },
+  { id:'NIV',        label:'NIV',    icon:'🇺🇸' },
 ];
 let loadedDBs = {}; // id → { name2num, verses }
 
@@ -1600,7 +1591,7 @@ function applyVerseFont() {
 function toggleFontControls() {
   fontControlsOpen = !fontControlsOpen;
   const grp = document.getElementById('fontCtrlGroup');
-  if (grp) grp.style.display = fontControlsOpen ? 'inline-flex' : 'none';
+  if (grp) grp.style.display = fontControlsOpen ? 'flex' : 'none';
 }
 
 // ── 탭 전환 ──
@@ -1609,7 +1600,8 @@ function switchTab(tab) {
   currentTab = tab;
   ['verse','comm','exeg','med','cal'].forEach(t => {
     document.getElementById('panel'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
-    document.getElementById('tabBtn'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active', t===tab);
+    const tabBtn = document.getElementById('tabBtn'+t.charAt(0).toUpperCase()+t.slice(1));
+    if (tabBtn) tabBtn.classList.toggle('active', t===tab);
   });
   if (tab==='verse') renderVersePanel();
   if (tab==='comm')  renderCommPanel();
@@ -1618,19 +1610,15 @@ function switchTab(tab) {
   if (tab==='cal')   renderCalendarPanel();
 }
 
-// ── 스크롤 시 헤더 3단(헤더 · 탭바 · 본문주소바) 고정 오프셋 계산 ──
+// ── 스크롤 시 상단 고정 오프셋 계산 (탭바 · 본문주소바) ──
 function updateStickyOffsets() {
-  const headerEl  = document.querySelector('header');
   const datebarEl = document.querySelector('.datebar-wrap');
-  if (headerEl)  document.documentElement.style.setProperty('--header-h', headerEl.offsetHeight + 'px');
   if (datebarEl) document.documentElement.style.setProperty('--datebar-h', datebarEl.offsetHeight + 'px');
 }
 updateStickyOffsets();
 if (window.ResizeObserver) {
   const __ro = new ResizeObserver(updateStickyOffsets);
-  const __headerEl  = document.querySelector('header');
   const __datebarEl = document.querySelector('.datebar-wrap');
-  if (__headerEl)  __ro.observe(__headerEl);
   if (__datebarEl) __ro.observe(__datebarEl);
 } else {
   window.addEventListener('resize', updateStickyOffsets);
@@ -1752,7 +1740,7 @@ function renderVersePanel() {
         <div class="card-hd-right" id="cardHdRight">
           <span class="font-ctrl" title="현재 큐티책 기준으로 본문·질문·해설을 새로 생성합니다" onclick="regenerateContentForQT()">↺</span>
           <span class="font-ctrl" title="글자 크기 조절" onclick="toggleFontControls()">Aa</span>
-          <span class="font-ctrl-group" id="fontCtrlGroup" style="display:${fontControlsOpen ? 'inline-flex' : 'none'};">
+          <span class="font-ctrl-group" id="fontCtrlGroup" style="display:${fontControlsOpen ? 'flex' : 'none'};">
             <span class="font-ctrl" title="본문 글자 크게" onclick="adjVerseFont(1)">A+</span>
             <span class="font-ctrl" title="본문 글자 작게" onclick="adjVerseFont(-1)">A-</span>
           </span>
@@ -1916,7 +1904,10 @@ function renderCommPanel() {
         <div class="ai-hd-left">
           <span class="ai-hd-title">💡 오늘의 묵상 해설</span>
         </div>
-        <button class="btn-refresh" onclick="refreshCommentary()">↺ 새로 생성</button>
+        <div class="ai-hd-right">
+          <button class="btn-goto" onclick="switchTab('exeg')">🔎 주석 보기</button>
+          <button class="btn-refresh" onclick="refreshCommentary()">↺ 새로 생성</button>
+        </div>
       </div>
       <div class="ai-body">
         <div id="aiText" class="ai-text">
@@ -2013,7 +2004,10 @@ function renderExegesisPanel() {
         <div class="ai-hd-left">
           <span class="ai-hd-title">🔎 본문해석</span>
         </div>
-        <button class="btn-refresh" onclick="refreshExegesis()">↺ 새로 생성</button>
+        <div class="ai-hd-right">
+          <button class="btn-goto" onclick="switchTab('comm')">💡 해설 보기</button>
+          <button class="btn-refresh" onclick="refreshExegesis()">↺ 새로 생성</button>
+        </div>
       </div>
       <div class="ai-body">
         <div id="exegText" class="ai-text">
