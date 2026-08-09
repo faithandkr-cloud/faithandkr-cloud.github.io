@@ -183,17 +183,20 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── 성경본문 카드 ── */
 .verse-card {
-  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
-  border-top: 1px solid rgba(154,123,53,.35);
+  background: var(--navy-dk);
 }
 .card-hd {
-  background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  background: linear-gradient(90deg, var(--navy), var(--navy-lt));
   padding: 8px 16px;
   min-height: 52px;
   display: flex; align-items: center; justify-content: space-between; gap: 6px;
   position: sticky;
   top: var(--datebar-h, 44px);
   z-index: 80;
+  border-radius: 14px;
+  box-shadow: none;
+  border: none;
+  margin: 10px 0 0 0;
 }
 .card-hd-left { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
 .card-hd-center { flex: 1; min-width: 0; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -205,25 +208,29 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   background: transparent;
   border: none; border-radius: 8px;
   font-size: 1.3rem; font-weight: 800; line-height: 1;
-  color: var(--navy-dk);
+  color: var(--cream);
   cursor: pointer; user-select: none;
 }
-.card-hd-nav-btn:hover { background: rgba(16,29,46,.3); }
-.card-hd-nav-btn:active { background: rgba(16,29,46,.45); }
-.card-hd-date { font-size: .66rem; font-weight: 600; color: rgba(16,29,46,.7); margin-bottom: 1px; white-space: nowrap; }
+.card-hd-nav-btn:hover { background: rgba(255,255,255,.14); }
+.card-hd-nav-btn:active { background: rgba(255,255,255,.22); }
+.card-hd-date { font-size: .66rem; font-weight: 600; color: var(--gold-lt); margin-bottom: 1px; white-space: nowrap; }
 .card-hd-addr { display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 0; }
 .card-hd-right { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; position: relative; }
-.card-hd-icon { font-size: 1.1rem; color: var(--navy-dk); flex-shrink: 0; }
-.card-hd-title { font-size: .95rem; font-weight: 700; color: var(--navy-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-hd-icon { font-size: 1.1rem; color: var(--gold-lt); flex-shrink: 0; }
+.card-hd-title { font-size: .95rem; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-hd-badge {
   font-size: .65rem; font-weight: 700;
   background: transparent;
-  color: var(--navy-dk);
+  color: var(--gold-lt);
   padding: 2px 8px; border-radius: 10px;
   border: none; cursor: pointer; font-family: inherit;
 }
-.card-hd-badge:hover { background: rgba(16,29,46,.15); }
-.card-body { padding: 12px 8px 12px 4px; }
+.card-hd-badge:hover { background: rgba(255,255,255,.12); }
+.card-body {
+  padding: 12px 8px 12px 4px;
+  margin-top: 10px;
+  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
+}
 .verse-book-title {
   font-size: .78rem;
   color: var(--gold-ink);
@@ -726,6 +733,13 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   user-select: none;
 }
 .font-ctrl:hover { background: rgba(16,29,46,.3); }
+/* card-hd(남색 바) 위에 바로 놓인 ↺ · Aa 버튼은 어두운 배경 위라 밝은 색으로 별도 처리 */
+.card-hd-right > .font-ctrl {
+  color: var(--cream);
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.25);
+}
+.card-hd-right > .font-ctrl:hover { background: rgba(255,255,255,.26); }
 .font-ctrl-group {
   position: absolute;
   top: 100%;
