@@ -23,6 +23,8 @@
   /* 성경 본문 카드 전용: 종이책 느낌의 밝은 배경 + 진한 잉크색 텍스트 */
   --paper:    #f6efdb;
   --paper-dk: #ecdfc0;
+  --paper-soft:    #fbf7ec;
+  --paper-soft-dk: #f3ecd8;
   --ink:      #2b2013;
   --ink-dim:  #6b5a3e;
   --gold-ink: #86662a;
@@ -181,7 +183,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── 성경본문 카드 ── */
 .verse-card {
-  background: linear-gradient(160deg, var(--paper), var(--paper-dk));
+  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
   border-top: 1px solid rgba(154,123,53,.35);
 }
 .card-hd {
@@ -294,7 +296,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── AI 해설 카드 (본문 카드와 통일: 갈색 헤더 + 옅은 베이지 바디) ── */
 .ai-card {
-  background: linear-gradient(160deg, var(--paper), var(--paper-dk));
+  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
   border-top: 1px solid rgba(154,123,53,.35);
   overflow: hidden;
 }
@@ -410,6 +412,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   transition: border-color .2s, box-shadow .2s;
 }
 .med-textarea:focus { border-color: var(--gold-ink); box-shadow: 0 0 0 3px rgba(154,123,53,.15); }
+.med-textarea::placeholder { font-size: .78rem; color: var(--ink-dim); }
 .med-textarea.prayer { min-height: 135px; }
 .med-example {
   background: rgba(154,123,53,.08);
@@ -697,7 +700,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 /* ── 절번호 정렬 ── */
 .verse-text { font-size: 15px; line-height: 1.75; color: var(--ink); }
 .vline { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-start; }
-.vnum  { min-width: 22px; font-size: .8em; color: var(--gold-ink);
+.vnum  { min-width: 22px; font-size: .95em; color: var(--gold-ink);
          font-weight: 700; padding-top: 2px; flex-shrink: 0; text-align: right; }
 .vtxt  { flex: 1; }
 
@@ -2093,7 +2096,7 @@ async function fetchExegesis(dateKey, todayData) {
 // ── 묵상 패널 ──
 const MED_QUESTIONS = [
   { key:'q1', label:'1', q:'하나님은 누구십니까?',          ph:'이 본문에서 하나님(예수님, 성령님)은 어떤 분으로 나타나 있나요?', cls:'', minHeight:140 },
-  { key:'q2', label:'2', q:'읽고 느낀 점을 쓰세요.',        ph:'오늘 말씀을 읽으며 마음에 와 닿은 것, 도전받은 것을 적어보세요.', cls:'', minHeight:140 },
+  { key:'q2', label:'2', q:'읽고 느낀 점을 쓰세요.',        ph:'오늘 말씀을 읽으며 마음에 와 닿은 것, 도전받은 것을 적어보세요.', cls:'', minHeight:220 },
   { key:'q3', label:'3', q:'기도문을 작성하고 기도해요.',   ph:'오늘 말씀을 붙들고 드리는 기도를 적어보세요...', cls:'prayer', collapsible:true,
     example: `<b>시편 121편 묵상 예)</b><br>
 <span class="ex-quote">"하나님이 재권에게 말한다. 나는 천지를 지은 여호와다. 한번 산을 향하여 눈을 들어봐라. 너의 도움이 어디서 온다고 생각하니? 바로 천지를 지은 바로 나로부터 나온다. 그러니 재권아, 나만 의지해라. 난 너의 도움이 될 것이다. 너의 피난처가 될 것이다. 두려워하지 마라. 걱정하지 마라..."</span>
