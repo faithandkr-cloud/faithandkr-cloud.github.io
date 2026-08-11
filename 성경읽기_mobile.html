@@ -183,13 +183,13 @@ select{font-family:inherit;}
   position:absolute; top:0; left:0; right:0; bottom:0; z-index:90;
   max-height:none; border-radius:0 0 16px 16px; transform:translateY(-100%);
   display:flex; flex-direction:column; box-shadow:0 10px 24px rgba(0,0,0,0.28);
-  transition:transform .25s ease; background:#EEF2FA;
+  transition:transform .25s ease; background:linear-gradient(160deg, #F5F8FE 0%, #E4EAF7 55%, #D3DEF2 100%);
 }
 #locSheet.show{transform:translateY(0);}
 #locSheet .sheet-handle{display:none;}
-.pk-header-row{display:flex; flex-shrink:0; background:#E4EAF7; border-top:1px solid var(--line); border-bottom:1px solid var(--line); gap:6px; padding:0 4px;}
+.pk-header-row{display:flex; flex-shrink:0; background:rgba(255,255,255,0.35); backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); border-top:1px solid var(--line); border-bottom:1px solid var(--line); gap:6px; padding:0 4px;}
 .pk-header{padding:8px 6px; font-size:12.5px; font-weight:800; color:var(--ink-soft); text-align:center;}
-.pk-header.range{flex:0 0 88px;}
+.pk-header.range{flex:0 0 54px;}
 .pk-header.book{flex:1.6;}
 .pk-header.chapter{flex:0 0 76px;}
 .pk-header.pk-verse{flex:0 0 76px;}
@@ -199,16 +199,17 @@ select{font-family:inherit;}
   scrollbar-width:none; -ms-overflow-style:none;
 }
 .pk-col::-webkit-scrollbar{display:none; width:0; height:0;}
-.pk-col.range{flex:0 0 88px; background:#E4EAF7;}
+.pk-col.range{flex:0 0 54px; background:rgba(255,255,255,0.25);}
 .pk-col.book{flex:1.6;}
 .pk-col.chapter{flex:0 0 76px;}
 .pk-col.pk-verse{flex:0 0 76px;}
-.pk-item{padding:3px 12px; font-size:15px; font-weight:400; border-bottom:1px solid var(--line); color:var(--ink); cursor:pointer; transition:background .1s ease;}
+.pk-item{padding:3px 12px; font-size:15px; font-weight:400; border-bottom:1px solid var(--line); color:var(--ink); cursor:pointer; transition:background .1s ease; white-space:nowrap;}
 .pk-item:active{background:var(--gold-bg);}
 .pk-col.chapter .pk-item, .pk-col.pk-verse .pk-item{text-align:center; padding:3px 6px;}
+.pk-col.range .pk-item{text-align:center; padding:3px 3px; font-size:13px;}
 .pk-item.active{background:var(--gold); color:#3a2c08; font-weight:800;}
 .pk-item.range-btn{color:var(--navy-soft); font-weight:800;}
-.pk-item.range-label{color:var(--ink-soft); font-size:12px; font-weight:700; padding:9px 14px 4px; border-bottom:none;}
+.pk-item.range-label{color:var(--ink-soft); font-size:11px; font-weight:700; padding:9px 3px 4px; border-bottom:none;}
 .pk-confirm-bar{display:flex; border-top:1px solid var(--line); flex-shrink:0;}
 .pk-confirm-bar button{flex:1; padding:12px 8px; font-size:15px; font-weight:800; border:none; background:none; transition:background .12s ease;}
 .pk-confirm-bar button:active{background:var(--gold-bg);}
@@ -275,6 +276,33 @@ select{font-family:inherit;}
   width:100%; margin-top:10px; background:#F4F7FD; color:var(--ink); border:1.5px solid #DCE4F5;
   border-radius:10px; padding:11px 10px; font-size:13.5px; font-weight:700; -webkit-appearance:none; appearance:none;
 }
+
+/* ===== 단어 검색 시트 (헤더 바로 아래, 본문 영역 안에서 아래로 슬라이드) =====
+   #scriptureWrap은 헤더 다음에 오는 요소라 그 안에서 top:0은 항상 "헤더 바로 아래"를 뜻한다. */
+#searchBackdrop{position:absolute; inset:0; z-index:80;}
+#searchSheet{
+  position:absolute; top:0; bottom:auto; left:0; right:0; z-index:90;
+  transform:translateY(-100%);
+  border-radius:0 0 18px 18px;
+  box-shadow:0 10px 24px rgba(0,0,0,0.28);
+}
+#searchSheet.show{transform:translateY(0);}
+#searchHandle{cursor:pointer;}
+.search-input-row{display:flex; gap:8px; margin-bottom:6px;}
+#searchInput{
+  flex:1; min-width:0; height:34px; border:1.5px solid var(--line); border-radius:9px; padding:0 10px;
+  font-family:inherit; font-size:13.5px; background:#fff; color:var(--ink);
+}
+#searchGoBtn{
+  flex-shrink:0; height:34px; background:var(--navy); color:#fff; border:none; border-radius:9px;
+  padding:0 14px; font-size:13px; font-weight:800;
+}
+.search-status{font-size:12.5px; color:var(--ink-soft); margin:0 2px 12px;}
+.search-result-item{padding:10px 8px; border-bottom:1px solid var(--line); cursor:pointer; border-radius:8px; transition:background .1s ease;}
+.search-result-item:active{background:var(--gold-bg);}
+.search-result-ref{font-size:12.5px; font-weight:800; color:var(--navy-soft); margin-bottom:3px;}
+.search-result-text{font-size:14.5px; line-height:1.6; color:var(--ink); font-family:var(--font-serif);}
+.search-hit{background:#FFD040; color:#2A2823; border-radius:3px; padding:0 1px; font-weight:800;}
 </style>
 </head>
 <body>
@@ -285,6 +313,7 @@ select{font-family:inherit;}
       <button id="locBtn"></button>
       <button type="button" class="trans-sel" id="mainTransBtn"></button>
       <button class="icon-btn" id="fontBtn" title="글자 크기">Aa</button>
+      <button class="icon-btn" id="searchBtn" title="단어 검색">🔍</button>
       <button id="hymnBtn" title="찬송가">🎵 찬송</button>
     </div>
   </div>
@@ -321,6 +350,20 @@ select{font-family:inherit;}
       <div class="pk-confirm-bar">
         <button id="locConfirmBtn"></button>
         <button id="locCancelBtn">취소</button>
+      </div>
+    </div>
+
+    <!-- 단어 검색 시트 (헤더 바로 아래, 본문 영역 안에서 슬라이드) -->
+    <div class="sheet-backdrop" id="searchBackdrop"></div>
+    <div class="sheet" id="searchSheet">
+      <div class="sheet-handle" id="searchHandle"></div>
+      <div class="sheet-body" id="searchSheetBody">
+        <div class="search-input-row">
+          <input type="text" id="searchInput" placeholder="검색할 단어를 입력하세요" enterkeyhint="search">
+          <button id="searchGoBtn">검색</button>
+        </div>
+        <div class="search-status" id="searchStatus"></div>
+        <div id="searchResults"></div>
       </div>
     </div>
   </div>
@@ -427,6 +470,7 @@ select{font-family:inherit;}
 let CURRENT_VERSE_TEXT = {};   // {절번호: 본문텍스트} - 렌더링될 때마다 갱신
 const selectedVerses = new Set(); // 현재 빨간색으로 선택된 절번호들
 let MAIN_TRANS_KEYS = []; // 헤더 번역본 드롭다운에 표시할 번역본 목록
+let searchHighlightWord = ''; // 마지막으로 검색한 단어 - 본문에 노란색으로 표시하기 위해 기억해둠
 
 /* ===================== 설정 ===================== */
 // 성경/사전/주석은 모두 마이스워드 SQLite(.mybible) 원본 파일을 설정(⚙)에서 그대로 등록해 씁니다.
@@ -531,9 +575,24 @@ const AppDB = (()=>{
 
 /* ===================== 유틸 ===================== */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// escText는 이미 esc()를 거친(HTML 이스케이프된) 텍스트여야 함. word와 일치하는 부분을 <mark>로 감싼다.
+function highlightMatches(escText, word){
+  if(!word) return escText;
+  const w = esc(word).trim();
+  if(!w) return escText;
+  const pattern = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  try{
+    const re = new RegExp('('+pattern+')', 'gi');
+    return escText.replace(re, '<mark class="search-hit">$1</mark>');
+  }catch(e){ return escText; }
+}
 function bookName(bn){
   // SQLite 원본(Bible 테이블)에는 책 이름이 들어있지 않아 항상 한글 이름을 사용합니다.
   return BOOK_FALLBACK[bn] || ('책'+bn);
+}
+const BOOK_ABBR = {1:'창',2:'출',3:'레',4:'민',5:'신',6:'수',7:'삿',8:'룻',9:'삼상',10:'삼하',11:'왕상',12:'왕하',13:'대상',14:'대하',15:'스',16:'느',17:'에',18:'욥',19:'시',20:'잠',21:'전',22:'아',23:'사',24:'렘',25:'애',26:'겔',27:'단',28:'호',29:'욜',30:'암',31:'옵',32:'욘',33:'미',34:'나',35:'합',36:'습',37:'학',38:'슥',39:'말',40:'마',41:'막',42:'눅',43:'요',44:'행',45:'롬',46:'고전',47:'고후',48:'갈',49:'엡',50:'빌',51:'골',52:'살전',53:'살후',54:'딤전',55:'딤후',56:'딛',57:'몬',58:'히',59:'약',60:'벧전',61:'벧후',62:'요일',63:'요이',64:'요삼',65:'유',66:'계'};
+function bookAbbr(bn){
+  return BOOK_ABBR[bn] || bookName(bn);
 }
 /* ===================== 홈으로 이동 =====================
    대문.html의 iframe 안에서 열린 경우: 부모창에 메시지를 보내 홈으로 이동시킨다.
@@ -757,15 +816,16 @@ async function renderChapter(){
     const memoIcon = '<span class="vicon memo-icon'+(hasMemo?' has-memo':'')+'" data-memo-v="'+vn+'"><svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>';
     const icons = '<span class="verse-icons">'+cmtIcon+memoIcon+'</span>';
     const rowClass = (hasMemo ? ' has-memo' : '') + (isHl ? ' vhighlight' : '');
+    const mainHtml = highlightMatches(esc(mainText), searchHighlightWord);
     if(state.compareOn && compData){
       const compText = compData[String(vn)] || '';
       html += '<div class="verse-pair'+rowClass+'" data-v="'+vn+'">'
-        + '<div class="row"><span class="vnum" data-vnum="'+vn+'">'+vn+'</span><span class="vtext">'+esc(mainText)+icons+'</span></div>'
-        + (compText ? '<div class="row"><span class="vnum"></span><span class="vtext secondary">'+esc(compText)+'</span></div>' : '')
+        + '<div class="row"><span class="vnum" data-vnum="'+vn+'">'+vn+'</span><span class="vtext">'+mainHtml+icons+'</span></div>'
+        + (compText ? '<div class="row"><span class="vnum"></span><span class="vtext secondary">'+highlightMatches(esc(compText), searchHighlightWord)+'</span></div>' : '')
         + '</div>';
     } else {
       html += '<div class="verse'+rowClass+'" data-v="'+vn+'">'
-        + '<span class="vnum" data-vnum="'+vn+'">'+vn+'</span><span class="vtext">'+esc(mainText)+icons+'</span>'
+        + '<span class="vnum" data-vnum="'+vn+'">'+vn+'</span><span class="vtext">'+mainHtml+icons+'</span>'
         + '</div>';
     }
   });
@@ -865,7 +925,7 @@ const JUMP_ANCHORS = [1,11,19,28,40,51,66]; // 창/왕상/시/호/마/골/계
 let pk = {book:1, chapter:1, verse:1, filter:'all'}; // 피커 임시 선택 상태
 
 function updateLocBtn(){
-  document.getElementById('locBtn').textContent = bookName(state.book)+' '+state.chapter+'장';
+  document.getElementById('locBtn').textContent = bookAbbr(state.book)+' '+state.chapter+'장';
 }
 function openLocSheet(){
   pk.book = state.book; pk.chapter = state.chapter; pk.verse = 1; pk.filter='all';
@@ -883,7 +943,7 @@ function renderPkRange(){
     + '<div class="pk-item range-btn'+(pk.filter==='nt'?' active':'')+'" data-range="nt">신약</div>'
     + '<div class="pk-item range-label">점프</div>';
   JUMP_ANCHORS.forEach(b=>{
-    html += '<div class="pk-item" data-jump="'+b+'">'+esc(bookName(b))+'</div>';
+    html += '<div class="pk-item" data-jump="'+b+'">'+esc(bookAbbr(b))+'</div>';
   });
   document.getElementById('pkRange').innerHTML = html;
 }
@@ -921,7 +981,7 @@ function renderPkVerse(){
   if(activeEl) activeEl.scrollIntoView({block:'center'});
 }
 function updatePkConfirmText(){
-  document.getElementById('locConfirmBtn').textContent = bookName(pk.book)+' '+pk.chapter+':'+pk.verse+' 선택';
+  document.getElementById('locConfirmBtn').textContent = bookAbbr(pk.book)+' '+pk.chapter+':'+pk.verse+' 선택';
 }
 async function fillTransSelects(){
   const ck = document.getElementById('compareTransSel');
@@ -1192,6 +1252,74 @@ function confirmLocSelection(){
     }
   });
 }
+/* ===================== 단어 검색 ===================== */
+function openSearchSheet(){
+  document.getElementById('searchBackdrop').classList.add('show');
+  document.getElementById('searchSheet').classList.add('show');
+  setTimeout(()=>{ document.getElementById('searchInput').focus(); }, 60);
+}
+function closeSearchSheet(){
+  document.getElementById('searchBackdrop').classList.remove('show');
+  document.getElementById('searchSheet').classList.remove('show');
+}
+async function runBibleSearch(){
+  const raw = document.getElementById('searchInput').value.trim();
+  const statusEl = document.getElementById('searchStatus');
+  const resultsEl = document.getElementById('searchResults');
+  if(!raw){ statusEl.textContent=''; resultsEl.innerHTML=''; return; }
+
+  statusEl.textContent = '검색 중…';
+  resultsEl.innerHTML = '';
+
+  const db = await loadBibleDB(state.mainKey);
+  if(!db){
+    statusEl.textContent = '검색할 성경 본문이 없습니다. 설정 ⚙ → 성경 번역본 불러오기에서 '+esc(state.mainKey)+'을(를) 등록해주세요.';
+    return;
+  }
+
+  let rows = [];
+  try{
+    const escapedForLike = raw.replace(/[\\%_]/g, ch=> '\\'+ch);
+    const res = db.exec(
+      "SELECT Book, Chapter, Verse, Scripture FROM Bible WHERE Scripture LIKE ? ESCAPE '\\' ORDER BY Book, Chapter, Verse LIMIT 300",
+      ['%'+escapedForLike+'%']
+    );
+    if(res.length) rows = res[0].values;
+  }catch(e){
+    console.error('성경 단어 검색 실패:', e);
+    statusEl.textContent = '검색 중 오류가 발생했습니다.';
+    return;
+  }
+
+  if(!rows.length){
+    statusEl.textContent = '"'+raw+'" 검색 결과가 없습니다.';
+    return;
+  }
+
+  searchHighlightWord = raw;
+  statusEl.textContent = esc(state.mainKey)+' · 총 '+rows.length+'건'+(rows.length>=300 ? ' (최대 300건까지 표시됩니다)' : '');
+  resultsEl.innerHTML = rows.map(r=>{
+    const book = r[0], chapter = r[1], verse = r[2], text = r[3];
+    const ref = bookName(book)+' '+chapter+':'+verse;
+    return '<div class="search-result-item" data-book="'+book+'" data-chapter="'+chapter+'" data-verse="'+verse+'">'
+      + '<div class="search-result-ref">'+esc(ref)+'</div>'
+      + '<div class="search-result-text">'+highlightMatches(esc(text), raw)+'</div>'
+      + '</div>';
+  }).join('');
+}
+function jumpToSearchResult(book, chapter, verse){
+  state.book = book; state.chapter = chapter;
+  closeSearchSheet(); updateLocBtn(); saveState();
+  renderChapter().then(()=>{
+    document.querySelectorAll('.jump-highlight').forEach(el=> el.classList.remove('jump-highlight'));
+    const vEl = document.querySelector('.verse[data-v="'+verse+'"], .verse-pair[data-v="'+verse+'"]');
+    if(vEl){
+      vEl.scrollIntoView({block:'center'});
+      vEl.classList.add('jump-highlight');
+    }
+  });
+}
+
 function bindEvents(){
   document.getElementById('homeBtn').onclick = goHomeApp;
   document.getElementById('locBtn').onclick = openLocSheet;
@@ -1312,6 +1440,19 @@ function bindEvents(){
     saveState(); renderCompareModeRow(); renderChapter();
   });
   document.getElementById('exportMemoBtn').onclick = exportMemos;
+
+  document.getElementById('searchBtn').onclick = openSearchSheet;
+  document.getElementById('searchBackdrop').onclick = closeSearchSheet;
+  document.getElementById('searchHandle').onclick = closeSearchSheet;
+  document.getElementById('searchGoBtn').onclick = runBibleSearch;
+  document.getElementById('searchInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); runBibleSearch(); }
+  });
+  document.getElementById('searchResults').addEventListener('click', (e)=>{
+    const item = e.target.closest('.search-result-item');
+    if(!item) return;
+    jumpToSearchResult(parseInt(item.dataset.book), parseInt(item.dataset.chapter), parseInt(item.dataset.verse));
+  });
 
   document.getElementById('scripture').addEventListener('click', (e)=>{
     const icon = e.target.closest('.cmt-icon');
