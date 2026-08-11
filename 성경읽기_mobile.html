@@ -53,8 +53,6 @@ select{font-family:inherit;}
   transition:background .12s ease, transform .12s ease;
 }
 .icon-btn:active{background:rgba(255,255,255,0.32); transform:scale(0.94);}
-#backBtn{transition:opacity .15s ease, background .12s ease, transform .12s ease;}
-#backBtn.disabled{opacity:0.32; pointer-events:none;}
 #hymnBtn{
   background:transparent; border:none; border-radius:10px; color:#F0C75E;
   height:40px; padding:0 12px; min-width:0; font-size:14.5px; font-weight:800; letter-spacing:0.2px; display:flex; align-items:center; justify-content:center; gap:4px; flex:0 0 auto;
@@ -127,13 +125,37 @@ select{font-family:inherit;}
 #copyToast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
 
-/* ===== 본문 영역 플로팅 홈 버튼 ===== */
-#homeBtn{
+/* ===== 본문 영역 플로팅 홈 + 책갈피 버튼 (맨 아래 오른쪽) ===== */
+#floatRightGroup{
   position:absolute; right:14px; bottom:calc(18px + var(--safe-bottom)); z-index:40;
+  display:flex; align-items:center; gap:10px;
+}
+#homeBtn{
   width:44px; height:44px; border-radius:50%; background:rgba(27,42,82,0.18); color:rgba(27,42,82,0.65);
   box-shadow:none; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); flex-shrink:0;
 }
 #homeBtn:active{background:rgba(27,42,82,0.32); transform:scale(0.94);}
+
+/* ===== 본문 영역 플로팅 뒤로/앞으로 버튼 (맨 아래 왼쪽) ===== */
+#floatLeftGroup{
+  position:absolute; left:6px; bottom:calc(14px + var(--safe-bottom)); z-index:40;
+  display:flex; align-items:center; gap:0px;
+}
+#backBtn, #forwardBtn{
+  width:40px; height:42px; border-radius:50%; background:transparent; border:none;
+  color:rgba(27,42,82,0.45); font-size:26px; font-weight:700; line-height:1;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:opacity .15s ease, transform .12s ease, color .12s ease;
+}
+#backBtn:active, #forwardBtn:active{color:rgba(27,42,82,0.75); transform:scale(0.94);}
+#backBtn.disabled, #forwardBtn.disabled{opacity:0.3; pointer-events:none;}
+#bookmarkBtn{
+  width:40px; height:40px; border-radius:50%; background:rgba(27,42,82,0.18); color:rgba(27,42,82,0.65);
+  border:none; box-shadow:none; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:background .12s ease, transform .12s ease;
+}
+#bookmarkBtn:active{background:rgba(27,42,82,0.32); transform:scale(0.94);}
 
 /* ===== 폰트크기 조절 팝오버 ===== */
 #fontPop{
@@ -308,22 +330,21 @@ select{font-family:inherit;}
 
 /* ===== 책갈피 시트 ===== */
 .bookmark-add-btn{
-  width:100%; background:var(--navy); color:#fff; border:none; border-radius:10px;
-  padding:11px; font-size:14.5px; font-weight:800; margin-bottom:14px;
+  width:100%; background:var(--navy); color:#fff; border:none; border-radius:9px;
+  padding:9px; font-size:13px; font-weight:800; margin-bottom:12px;
 }
 .bookmark-add-btn:disabled{opacity:0.4;}
 .bookmark-item{
-  display:flex; align-items:center; gap:6px; padding:10px 6px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:6px; padding:8px 6px; border-bottom:1px solid var(--line);
 }
 .bookmark-item-main{flex:1; min-width:0; cursor:pointer;}
 .bookmark-item-label{
-  font-size:14.5px; font-weight:800; color:var(--navy); background:transparent; border:none; border-bottom:1.5px solid transparent;
-  width:100%; padding:2px 0; font-family:inherit;
+  font-size:13.5px; font-weight:800; color:var(--navy); background:transparent; border:none; border-bottom:1.5px solid transparent;
+  width:100%; padding:3px 0; font-family:inherit;
 }
 .bookmark-item-label:focus{outline:none; border-bottom-color:var(--gold);}
-.bookmark-item-ref{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
-.bookmark-item-del{flex-shrink:0; background:transparent; border:none; color:var(--ink-soft); font-size:17px; padding:4px 8px;}
-.bookmark-empty{font-size:13.5px; color:var(--ink-soft); text-align:center; padding:20px 0;}
+.bookmark-item-del{flex-shrink:0; background:transparent; border:none; color:var(--ink-soft); font-size:16px; padding:4px 8px;}
+.bookmark-empty{font-size:13px; color:var(--ink-soft); text-align:center; padding:18px 0;}
 </style>
 </head>
 <body>
@@ -332,11 +353,9 @@ select{font-family:inherit;}
     <div id="topbar-row1">
       <button class="icon-btn" id="settingsBtn" title="설정">☰</button>
       <button id="locBtn"></button>
-      <button class="icon-btn" id="backBtn" title="이전 위치로">↩</button>
       <button type="button" class="trans-sel" id="mainTransBtn"></button>
       <button class="icon-btn" id="fontBtn" title="글자 크기">Aa</button>
       <button class="icon-btn" id="searchBtn" title="단어 검색">🔍</button>
-      <button class="icon-btn" id="bookmarkBtn" title="책갈피">🔖</button>
       <button id="hymnBtn" title="찬송가">🎵 찬송</button>
     </div>
   </div>
@@ -346,7 +365,14 @@ select{font-family:inherit;}
       <div class="load-msg">불러오는 중…</div>
     </div>
 
-    <button class="icon-btn" id="homeBtn" title="홈">🏠</button>
+    <div id="floatLeftGroup">
+      <button id="backBtn" title="이전 위치로 (길게 누르면 발자취 전체 지우기)">‹</button>
+      <button id="forwardBtn" title="다음 위치로">›</button>
+    </div>
+    <div id="floatRightGroup">
+      <button id="bookmarkBtn" title="책갈피"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 2.5c-1.1 0-2 .9-2 2v17l8-4.8 8 4.8v-17c0-1.1-.9-2-2-2H6z"/></svg></button>
+      <button class="icon-btn" id="homeBtn" title="홈">🏠</button>
+    </div>
 
     <!-- 폰트 크기 팝오버 -->
     <div id="fontPop">
@@ -1272,34 +1298,97 @@ function exportMemos(){
   URL.revokeObjectURL(url);
 }
 
-/* ===================== 이전 위치로 돌아가기(자동 히스토리) =====================
-   책/장 검색, 검색 결과 이동, 책갈피 이동 등으로 "다른 곳"으로 이동하기 직전의
-   위치를 스택에 쌓아두고, ↩ 버튼으로 바로 직전 위치로 되돌아갈 수 있게 한다.
-   (세션 동안만 유지 — 새로고침하면 초기화됨. 브라우저 뒤로가기와 비슷한 개념)
+/* ===================== 방문 발자취(뒤로/앞으로, 영구 보관) =====================
+   책/장 검색, 검색 결과 이동, 책갈피 이동으로 "새로운 곳"을 볼 때마다 방문 순서를
+   발자취(navTrail)에 계속 이어붙인다(지워지지 않음). ‹ › 버튼은 이 발자취 안에서
+   커서(navCursor)만 앞뒤로 옮긴다. 앱을 껐다 켜도 localStorage에 남아있다.
+   최대 200곳까지 보관하며, 넘으면 가장 오래된 기록부터 지운다.
 */
-let navHistory = [];
-function pushNavHistory(){
-  const top = navHistory[navHistory.length-1];
-  if(top && top.book===state.book && top.chapter===state.chapter) return; // 같은 위치 중복 방지
-  navHistory.push({book:state.book, chapter:state.chapter});
-  if(navHistory.length>30) navHistory.shift();
-  updateBackBtn();
+const NAV_TRAIL_MAX = 200;
+let navTrail = [];
+let navCursor = -1;
+function loadNavTrail(){
+  try{
+    const s = JSON.parse(localStorage.getItem('bible_mobile_navtrail')||'null');
+    if(s && Array.isArray(s.trail) && s.trail.length){
+      navTrail = s.trail; navCursor = Math.min(Math.max(s.cursor||0,0), navTrail.length-1);
+      return;
+    }
+  }catch(_){}
+  navTrail = [{book:state.book, chapter:state.chapter}];
+  navCursor = 0;
+}
+function saveNavTrail(){
+  try{ localStorage.setItem('bible_mobile_navtrail', JSON.stringify({trail:navTrail, cursor:navCursor})); }catch(_){}
+}
+// 새로운 곳으로 이동했을 때 발자취 끝에 이어붙인다(기존 기록은 지우지 않음).
+function recordVisit(){
+  const last = navTrail[navTrail.length-1];
+  if(last && last.book===state.book && last.chapter===state.chapter){ navCursor = navTrail.length-1; updateNavButtons(); return; }
+  navTrail.push({book:state.book, chapter:state.chapter});
+  if(navTrail.length > NAV_TRAIL_MAX) navTrail.shift();
+  navCursor = navTrail.length-1;
+  saveNavTrail();
+  updateNavButtons();
 }
 function goBackNav(){
-  const prev = navHistory.pop();
-  if(!prev) return;
-  state.book = prev.book; state.chapter = prev.chapter;
-  updateLocBtn(); saveState(); updateBackBtn();
+  if(navCursor<=0) return;
+  navCursor--;
+  const loc = navTrail[navCursor];
+  state.book = loc.book; state.chapter = loc.chapter;
+  updateLocBtn(); saveState(); saveNavTrail(); updateNavButtons();
   renderChapter();
 }
-function updateBackBtn(){
-  const btn = document.getElementById('backBtn');
-  if(!btn) return;
-  btn.classList.toggle('disabled', navHistory.length===0);
+function goForwardNav(){
+  if(navCursor>=navTrail.length-1) return;
+  navCursor++;
+  const loc = navTrail[navCursor];
+  state.book = loc.book; state.chapter = loc.chapter;
+  updateLocBtn(); saveState(); saveNavTrail(); updateNavButtons();
+  renderChapter();
+}
+function clearNavTrail(){
+  if(!confirm('지금까지의 이동 발자취를 모두 지울까요? (되돌릴 수 없습니다)')) return;
+  navTrail = [{book:state.book, chapter:state.chapter}];
+  navCursor = 0;
+  saveNavTrail();
+  updateNavButtons();
+}
+function updateNavButtons(){
+  const back = document.getElementById('backBtn');
+  const fwd = document.getElementById('forwardBtn');
+  if(back) back.classList.toggle('disabled', navCursor<=0);
+  if(fwd) fwd.classList.toggle('disabled', navCursor>=navTrail.length-1);
+}
+// ‹ 버튼을 길게 누르면(0.6초) 발자취 전체 지우기 확인창이 뜬다.
+function bindLongPress(el, fn){
+  if(!el) return;
+  let timer = null, fired = false;
+  const start = ()=>{ fired=false; timer = setTimeout(()=>{ fired=true; fn(); }, 600); };
+  const cancel = ()=>{ if(timer) clearTimeout(timer); timer=null; };
+  el.addEventListener('touchstart', start, {passive:true});
+  el.addEventListener('touchend', cancel);
+  el.addEventListener('touchmove', cancel);
+  el.addEventListener('mousedown', start);
+  el.addEventListener('mouseup', cancel);
+  el.addEventListener('mouseleave', cancel);
+  el.addEventListener('click', (e)=>{ if(fired){ e.preventDefault(); e.stopPropagation(); } }, true);
 }
 
 /* ===================== 책갈피(최대 5개, 이름 붙여 저장) ===================== */
 const BOOKMARK_MAX = 5;
+// 지금 화면 맨 위에 걸쳐 보이는 절 번호를 찾는다 (책갈피 저장 시 몇 절인지 함께 기록하기 위함)
+function getCurrentTopVerse(){
+  const scEl = document.getElementById('scripture');
+  if(!scEl) return null;
+  const containerTop = scEl.getBoundingClientRect().top;
+  const items = scEl.querySelectorAll('.verse[data-v], .verse-pair[data-v]');
+  for(const el of items){
+    const r = el.getBoundingClientRect();
+    if(r.bottom > containerTop + 4) return parseInt(el.dataset.v, 10);
+  }
+  return items.length ? parseInt(items[items.length-1].dataset.v, 10) : null;
+}
 function loadBookmarks(){
   try{ return JSON.parse(localStorage.getItem('bible_mobile_bookmarks')||'[]'); }catch(_){ return []; }
 }
@@ -1324,11 +1413,9 @@ function renderBookmarkList(){
     return;
   }
   listEl.innerHTML = list.map((b, i)=>{
-    const ref = bookName(b.book)+' '+b.chapter+'장';
     return '<div class="bookmark-item" data-idx="'+i+'">'
       + '<div class="bookmark-item-main" data-act="jump">'
       +   '<input class="bookmark-item-label" data-act="rename" value="'+esc(b.label)+'">'
-      +   '<div class="bookmark-item-ref">'+esc(ref)+'</div>'
       + '</div>'
       + '<button class="bookmark-item-del" data-act="del" title="삭제">✕</button>'
       + '</div>';
@@ -1337,7 +1424,9 @@ function renderBookmarkList(){
 function addBookmark(){
   const list = loadBookmarks();
   if(list.length >= BOOKMARK_MAX){ alert('책갈피는 최대 '+BOOKMARK_MAX+'개까지 저장할 수 있습니다. 기존 책갈피를 삭제한 뒤 다시 저장해주세요.'); return; }
-  list.push({book:state.book, chapter:state.chapter, label:bookName(state.book)+' '+state.chapter+'장', ts:Date.now()});
+  const verse = getCurrentTopVerse();
+  const ref = bookName(state.book)+' '+state.chapter+(verse ? ':'+verse : '장');
+  list.push({book:state.book, chapter:state.chapter, verse:verse, label:ref, ts:Date.now()});
   saveBookmarks(list);
   renderBookmarkList();
 }
@@ -1345,10 +1434,17 @@ function jumpToBookmark(idx){
   const list = loadBookmarks();
   const b = list[idx];
   if(!b) return;
-  pushNavHistory();
   state.book = b.book; state.chapter = b.chapter;
-  closeBookmarkSheet(); updateLocBtn(); saveState();
-  renderChapter();
+  closeBookmarkSheet(); updateLocBtn(); saveState(); recordVisit();
+  renderChapter().then(()=>{
+    if(b.verse==null) return;
+    document.querySelectorAll('.jump-highlight').forEach(el=> el.classList.remove('jump-highlight'));
+    const vEl = document.querySelector('.verse[data-v="'+b.verse+'"], .verse-pair[data-v="'+b.verse+'"]');
+    if(vEl){
+      vEl.scrollIntoView({block:'start'});
+      vEl.classList.add('jump-highlight');
+    }
+  });
 }
 function deleteBookmark(idx){
   const list = loadBookmarks();
@@ -1359,16 +1455,16 @@ function deleteBookmark(idx){
 function renameBookmark(idx, newLabel){
   const list = loadBookmarks();
   if(!list[idx]) return;
-  list[idx].label = (newLabel||'').trim() || (bookName(list[idx].book)+' '+list[idx].chapter+'장');
+  const b = list[idx];
+  b.label = (newLabel||'').trim() || (bookName(b.book)+' '+b.chapter+(b.verse ? ':'+b.verse : '장'));
   saveBookmarks(list);
 }
 
 /* ===================== 이벤트 바인딩 ===================== */
 function confirmLocSelection(){
-  pushNavHistory();
   state.book = pk.book; state.chapter = pk.chapter;
   const targetVerse = pk.verse;
-  closeLocSheet(); updateLocBtn(); saveState();
+  closeLocSheet(); updateLocBtn(); saveState(); recordVisit();
   renderChapter().then(()=>{
     document.querySelectorAll('.jump-highlight').forEach(el=> el.classList.remove('jump-highlight'));
     const vEl = document.querySelector('.verse[data-v="'+targetVerse+'"], .verse-pair[data-v="'+targetVerse+'"]');
@@ -1434,9 +1530,8 @@ async function runBibleSearch(){
   }).join('');
 }
 function jumpToSearchResult(book, chapter, verse){
-  pushNavHistory();
   state.book = book; state.chapter = chapter;
-  closeSearchSheet(); updateLocBtn(); saveState();
+  closeSearchSheet(); updateLocBtn(); saveState(); recordVisit();
   renderChapter().then(()=>{
     document.querySelectorAll('.jump-highlight').forEach(el=> el.classList.remove('jump-highlight'));
     const vEl = document.querySelector('.verse[data-v="'+verse+'"], .verse-pair[data-v="'+verse+'"]');
@@ -1632,6 +1727,8 @@ function bindEvents(){
   });
 
   document.getElementById('backBtn').onclick = goBackNav;
+  document.getElementById('forwardBtn').onclick = goForwardNav;
+  bindLongPress(document.getElementById('backBtn'), clearNavTrail);
 
   document.getElementById('bookmarkBtn').onclick = openBookmarkSheet;
   document.getElementById('bookmarkClose').onclick = closeBookmarkSheet;
@@ -1663,10 +1760,11 @@ function bindEvents(){
 async function init(){
   ensureSqlJs(); // 백그라운드로 미리 시작 (await 안 함) — 아래 작업들과 병렬 진행
   loadState();
+  loadNavTrail();
   await fillTransSelects();
   applyFontChoice();
   updateLocBtn();
-  updateBackBtn();
+  updateNavButtons();
   bindEvents();
   await renderChapter();
 }
