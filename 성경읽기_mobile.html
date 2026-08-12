@@ -98,8 +98,8 @@ select{font-family:inherit;}
   width:18px; height:18px; border-radius:50%; font-size:10.5px; font-weight:800;
   border:1px solid #EAD9AE; cursor:pointer;
 }
-.vicon.cmt-icon{background:var(--gold-bg); color:var(--gold); transition:background .1s ease;}
-.vicon.cmt-icon:active{background:var(--gold);}
+.vicon.cmt-icon{background:#EFE7FA; color:#7A4FC4; transition:background .1s ease;}
+.vicon.cmt-icon:active{background:#7A4FC4; color:#fff;}
 .vicon.memo-icon{background:#EAF1FB; color:var(--navy-soft); border-color:#CBDAF0; transition:background .1s ease;}
 .vicon.memo-icon:active{background:#CBDAF0;}
 .vicon.memo-icon.has-memo{background:var(--navy); color:#fff; border-color:var(--navy);}
@@ -143,11 +143,11 @@ select{font-family:inherit;}
 }
 #backBtn, #forwardBtn{
   width:40px; height:42px; border-radius:50%; background:transparent; border:none;
-  color:rgba(27,42,82,0.45); font-size:26px; font-weight:700; line-height:1;
+  color:rgba(27,42,82,0.75); font-size:32px; font-weight:700; line-height:1;
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
   transition:opacity .15s ease, transform .12s ease, color .12s ease;
 }
-#backBtn:active, #forwardBtn:active{color:rgba(27,42,82,0.75); transform:scale(0.94);}
+#backBtn:active, #forwardBtn:active{color:rgba(27,42,82,1); transform:scale(0.94);}
 #backBtn.disabled, #forwardBtn.disabled{opacity:0.3; pointer-events:none;}
 #bookmarkBtn{
   width:40px; height:40px; border-radius:50%; background:rgba(27,42,82,0.18); color:rgba(27,42,82,0.65);
@@ -207,7 +207,7 @@ select{font-family:inherit;}
   position:absolute; top:0; left:0; right:0; bottom:0; z-index:90;
   max-height:none; border-radius:0 0 16px 16px; transform:translateY(-100%);
   display:flex; flex-direction:column; box-shadow:0 10px 24px rgba(0,0,0,0.28);
-  transition:transform .25s ease; background:linear-gradient(160deg, #F5F8FE 0%, #E4EAF7 55%, #D3DEF2 100%);
+  transition:transform .25s ease; background:linear-gradient(160deg, #C8D1E4 0%, #AEB9D4 55%, #929FC0 100%);
 }
 #locSheet.show{transform:translateY(0);}
 #locSheet .sheet-handle{display:none;}
@@ -331,19 +331,19 @@ select{font-family:inherit;}
 /* ===== 책갈피 시트 ===== */
 .bookmark-add-btn{
   width:100%; background:var(--navy); color:#fff; border:none; border-radius:9px;
-  padding:9px; font-size:13px; font-weight:800; margin-bottom:12px;
+  padding:7px; font-size:13px; font-weight:800; margin-bottom:8px;
 }
 .bookmark-add-btn:disabled{opacity:0.4;}
 .bookmark-item{
-  display:flex; align-items:center; gap:6px; padding:8px 6px; border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:4px; padding:4px 6px; border-bottom:1px solid var(--line);
 }
 .bookmark-item-main{flex:1; min-width:0; cursor:pointer;}
-.bookmark-item-label{
-  font-size:13.5px; font-weight:800; color:var(--navy); background:transparent; border:none; border-bottom:1.5px solid transparent;
-  width:100%; padding:3px 0; font-family:inherit;
+.bookmark-item-ref{
+  display:block; font-size:13.5px; font-weight:800; color:var(--navy);
+  padding:1px 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
-.bookmark-item-label:focus{outline:none; border-bottom-color:var(--gold);}
-.bookmark-item-del{flex-shrink:0; background:transparent; border:none; color:var(--ink-soft); font-size:16px; padding:4px 8px;}
+.bookmark-item-edit{flex-shrink:0; background:transparent; border:none; color:var(--ink-soft); font-size:14px; padding:2px 6px;}
+.bookmark-item-del{flex-shrink:0; background:transparent; border:none; color:var(--ink-soft); font-size:15px; padding:2px 7px;}
 .bookmark-empty{font-size:13px; color:var(--ink-soft); text-align:center; padding:18px 0;}
 </style>
 </head>
@@ -366,8 +366,8 @@ select{font-family:inherit;}
     </div>
 
     <div id="floatLeftGroup">
-      <button id="backBtn" title="이전 위치로 (길게 누르면 발자취 전체 지우기)">‹</button>
-      <button id="forwardBtn" title="다음 위치로">›</button>
+      <button id="backBtn" title="이전 위치로 (길게 누르면 발자취 전체 지우기)"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="11 6 5 12 11 18"/></svg></button>
+      <button id="forwardBtn" title="다음 위치로"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></button>
     </div>
     <div id="floatRightGroup">
       <button id="bookmarkBtn" title="책갈피"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 2.5c-1.1 0-2 .9-2 2v17l8-4.8 8 4.8v-17c0-1.1-.9-2-2-2H6z"/></svg></button>
@@ -451,7 +451,6 @@ select{font-family:inherit;}
 <!-- 책갈피 시트 -->
 <div class="sheet-backdrop" id="bookmarkBackdrop"></div>
 <div class="sheet" id="bookmarkSheet">
-  <div class="sheet-handle"></div>
   <div class="sheet-title"><span>책갈피</span><span class="x" id="bookmarkClose">✕</span></div>
   <div class="sheet-body">
     <button id="bookmarkAddBtn" class="bookmark-add-btn">+ 현재 위치 저장</button>
@@ -1415,8 +1414,9 @@ function renderBookmarkList(){
   listEl.innerHTML = list.map((b, i)=>{
     return '<div class="bookmark-item" data-idx="'+i+'">'
       + '<div class="bookmark-item-main" data-act="jump">'
-      +   '<input class="bookmark-item-label" data-act="rename" value="'+esc(b.label)+'">'
+      +   '<span class="bookmark-item-ref">'+esc(b.label)+'</span>'
       + '</div>'
+      + '<button class="bookmark-item-edit" data-act="rename" title="이름 수정">✎</button>'
       + '<button class="bookmark-item-del" data-act="del" title="삭제">✕</button>'
       + '</div>';
   }).join('');
@@ -1424,8 +1424,8 @@ function renderBookmarkList(){
 function addBookmark(){
   const list = loadBookmarks();
   if(list.length >= BOOKMARK_MAX){ alert('책갈피는 최대 '+BOOKMARK_MAX+'개까지 저장할 수 있습니다. 기존 책갈피를 삭제한 뒤 다시 저장해주세요.'); return; }
-  const verse = getCurrentTopVerse();
-  const ref = bookName(state.book)+' '+state.chapter+(verse ? ':'+verse : '장');
+  const verse = getCurrentTopVerse() || 1;
+  const ref = bookName(state.book)+' '+state.chapter+':'+verse;
   list.push({book:state.book, chapter:state.chapter, verse:verse, label:ref, ts:Date.now()});
   saveBookmarks(list);
   renderBookmarkList();
@@ -1456,7 +1456,7 @@ function renameBookmark(idx, newLabel){
   const list = loadBookmarks();
   if(!list[idx]) return;
   const b = list[idx];
-  b.label = (newLabel||'').trim() || (bookName(b.book)+' '+b.chapter+(b.verse ? ':'+b.verse : '장'));
+  b.label = (newLabel||'').trim() || (bookName(b.book)+' '+b.chapter+':'+(b.verse||1));
   saveBookmarks(list);
 }
 
@@ -1742,17 +1742,14 @@ function bindEvents(){
       deleteBookmark(idx);
       return;
     }
-    if(e.target.closest('[data-act="rename"]')) return; // 이름 입력창 클릭은 이동시키지 않음
+    if(e.target.closest('[data-act="rename"]')){
+      const list = loadBookmarks();
+      const cur = list[idx] ? list[idx].label : '';
+      const nv = prompt('책갈피 이름 수정', cur);
+      if(nv!==null){ renameBookmark(idx, nv); renderBookmarkList(); }
+      return;
+    }
     if(e.target.closest('[data-act="jump"]')) jumpToBookmark(idx);
-  });
-  document.getElementById('bookmarkList').addEventListener('change', (e)=>{
-    const input = e.target.closest('[data-act="rename"]');
-    if(!input) return;
-    const item = input.closest('.bookmark-item');
-    renameBookmark(parseInt(item.dataset.idx), input.value);
-  });
-  document.getElementById('bookmarkList').addEventListener('keydown', (e)=>{
-    if(e.target.closest('[data-act="rename"]') && e.key==='Enter'){ e.preventDefault(); e.target.blur(); }
   });
 }
 
