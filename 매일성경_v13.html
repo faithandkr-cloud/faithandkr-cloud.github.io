@@ -21,9 +21,9 @@
   --green:   #4a9b6f;
   --red:     #c0524a;
   /* 성경 본문 카드 전용: 종이책 느낌의 밝은 배경 + 진한 잉크색 텍스트 */
-  --paper:    #f6efdb;
+  --paper:    #F7F3EA;
   --paper-dk: #ecdfc0;
-  --paper-soft:    #fbf7ec;
+  --paper-soft:    #F7F3EA;
   --paper-soft-dk: #f3ecd8;
   --ink:      #2b2013;
   --ink-dim:  #6b5a3e;
@@ -193,12 +193,14 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   position: sticky;
   top: var(--datebar-h, 44px);
   z-index: 80;
-  border-radius: 14px;
+  border-radius: 0;
   box-shadow: none;
   border: none;
-  margin: 10px 0 0 0;
+  margin: 0;
 }
-.card-hd-left { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; }
+.card-hd-left { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.card-hd-left .api-status { padding: 2px 6px; font-size: .56rem; }
+.card-hd-left .led { width: 6px; height: 6px; }
 .card-hd-center { flex: 1; min-width: 0; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .card-hd-center-text { flex: 0 1 auto; min-width: 0; max-width: 100%; }
 .card-hd-nav-btn {
@@ -228,8 +230,8 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .card-hd-badge:hover { background: rgba(255,255,255,.12); }
 .card-body {
   padding: 12px 8px 12px 4px;
-  margin-top: 10px;
-  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
+  margin-top: 3px;
+  background: var(--paper-soft);
 }
 .verse-book-title {
   font-size: .78rem;
@@ -303,7 +305,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── AI 해설 카드 (본문 카드와 통일: 갈색 헤더 + 옅은 베이지 바디) ── */
 .ai-card {
-  background: linear-gradient(160deg, var(--paper-soft), var(--paper-soft-dk));
+  background: var(--paper-soft);
   border-top: 1px solid rgba(154,123,53,.35);
   overflow: hidden;
 }
@@ -372,7 +374,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── 묵상 카드: 필사 노트 콘셉트 — 금박 실선으로 세 질문을 잇고, 각 답변란은 줄노트처럼 ── */
 .meditation-card {
-  background: linear-gradient(160deg, var(--paper), var(--paper-dk));
+  background: var(--paper);
   border-top: 1px solid rgba(154,123,53,.35);
   overflow: hidden;
 }
@@ -767,11 +769,7 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
       <button class="tab-btn active" id="tabBtnVerse"     onclick="switchTab('verse')">📖 본문</button>
       <button class="tab-btn"        id="tabBtnComm"      onclick="switchTab('comm')">💡 해설</button>
       <button class="tab-btn"        id="tabBtnMed"       onclick="switchTab('med')">✍️ 묵상</button>
-    </div>
-    <button class="trans-select header-qt-btn" id="tabBtnCal" onclick="switchTab('cal')" title="달력">🗓️</button>
-    <div class="api-status" onclick="openSettings('ai')" title="API 연결 상태">
-      <div class="led" id="led"></div>
-      <span id="led-label">미설정</span>
+      <button class="tab-btn"        id="tabBtnCal"       onclick="switchTab('cal')">🗓️ 달력</button>
     </div>
   </div>
 </div>
@@ -1661,9 +1659,18 @@ if (window.ResizeObserver) {
 }
 
 // ── LED ──
+// led/led-label 요소는 이제 본문 카드(성경 본문 탭)를 렌더링할 때마다
+// 새로 생성되므로, 마지막 상태를 저장해두고 요소가 있을 때만 반영한다.
+let _ledState = { state: '', label: '미설정' };
 function setLED(state, label) {
-  document.getElementById('led').className = 'led ' + state;
-  document.getElementById('led-label').textContent = label;
+  _ledState = { state, label };
+  applyLED();
+}
+function applyLED() {
+  const led = document.getElementById('led');
+  const lbl = document.getElementById('led-label');
+  if (led) led.className = 'led ' + _ledState.state;
+  if (lbl) lbl.textContent = _ledState.label;
 }
 
 // ── 초기화 ──
@@ -1761,6 +1768,10 @@ function renderVersePanel() {
     <div class="verse-card">
       <div class="card-hd">
         <div class="card-hd-left" id="cardHdLeft">
+          <div class="api-status" onclick="openSettings('ai')" title="API 연결 상태">
+            <div class="led" id="led"></div>
+            <span id="led-label">미설정</span>
+          </div>
           <button class="card-hd-badge" id="transToggleBtn" onclick="toggleTrans()">${verId ? verLabel : '번역본 선택'}</button>
         </div>
         <div class="card-hd-center">
@@ -1809,6 +1820,8 @@ function renderVersePanel() {
   if (!kq || !subtitle) generateKeyQuestions(dateKey, todayData, verseText);
   // 저장된 폰트 크기 적용
   setTimeout(applyVerseFont, 0);
+  // 카드가 새로 그려졌으므로 API 상태 LED를 다시 반영
+  applyLED();
 }
 
 function renderKQItems(kq) {
