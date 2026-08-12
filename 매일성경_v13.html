@@ -199,7 +199,13 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
   margin: 0;
 }
 .card-hd-left { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; }
-.card-hd-left .api-status { padding: 2px 6px; font-size: .56rem; }
+.card-hd-left .api-status {
+  background: transparent;
+  border: none;
+  padding: 2px 6px;
+  margin-left: 2px;
+  font-size: .56rem;
+}
 .card-hd-left .led { width: 6px; height: 6px; }
 .card-hd-center { flex: 1; min-width: 0; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .card-hd-center-text { flex: 0 1 auto; min-width: 0; max-width: 100%; }
@@ -707,10 +713,14 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 }
 
 /* ── 절번호 정렬 ── */
-.verse-text { font-size: 15px; line-height: 1.75; color: var(--ink); }
+.verse-text { font-size: 15px; line-height: 1.5; color: var(--ink); }
 .vline { display: flex; gap: 8px; margin-bottom: 14px; align-items: flex-start; }
 .vnum  { min-width: 22px; font-size: .95em; color: var(--gold-ink);
-         font-weight: 700; padding-top: 2px; flex-shrink: 0; text-align: right; }
+         font-weight: 700; padding-top: 2px; flex-shrink: 0; text-align: right;
+         cursor: pointer; user-select: none; -webkit-user-select: none;
+         border-radius: 4px; transition: background .1s ease; }
+.vnum:active { background: rgba(154,123,53,.2); }
+.vnum.copied { color: #2E8B57; background: rgba(46,139,87,.14); font-weight: 900; }
 .vtxt  { flex: 1; }
 
 /* ── 순수 제목 (주소 제거 후) ── */
@@ -764,13 +774,13 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 <!-- 번역본 + 큐티책 + 탭 -->
 <div class="datebar-wrap">
   <div class="tab-nav-row">
-    <button class="btn-settings" onclick="openSettings('ai')" title="설정">☰</button>
     <div class="tab-nav">
       <button class="tab-btn active" id="tabBtnVerse"     onclick="switchTab('verse')">📖 본문</button>
       <button class="tab-btn"        id="tabBtnComm"      onclick="switchTab('comm')">💡 해설</button>
       <button class="tab-btn"        id="tabBtnMed"       onclick="switchTab('med')">✍️ 묵상</button>
       <button class="tab-btn"        id="tabBtnCal"       onclick="switchTab('cal')">🗓️ 달력</button>
     </div>
+    <button class="btn-settings" onclick="openSettings('ai')" title="설정">☰</button>
   </div>
 </div>
 
@@ -1602,12 +1612,53 @@ function fillBibleContent(verId, bibleData, progressEl, statusEl, qt) {
 // ── 절번호 포맷 (장:절 → 절만, 번호 정렬) ──
 function formatVerseText(text) {
   if (!text) return '';
+  selectedVerses.clear();
+  CURRENT_VERSE_TEXT_MAP = {};
   const lines = text.split('\n').filter(l => l.trim());
   return lines.map(line => {
     const m = line.match(/^(\d+):(\d+) (.*)$/);
     if (!m) return `<div class="vline">${line}</div>`;
-    return `<div class="vline"><span class="vnum">${m[2]}</span><span class="vtxt">${m[3]}</span></div>`;
+    CURRENT_VERSE_TEXT_MAP[m[2]] = m[3];
+    return `<div class="vline"><span class="vnum" data-vnum="${m[2]}" onclick="toggleVerseCopy(this)">${m[2]}</span><span class="vtxt">${m[3]}</span></div>`;
   }).join('');
+}
+
+// ── 절번호 클릭 → 본문 복사 ──
+// 절번호를 클릭하면 초록색으로 토글되고, 현재 선택된 절들을
+// "절번호 본문" 형식으로 한 절씩 줄바꿈하여 클립보드에 복사한다. (묵상 기록용)
+const selectedVerses = new Set();
+let CURRENT_VERSE_TEXT_MAP = {};
+function toggleVerseCopy(vnumEl) {
+  const vn = vnumEl.dataset.vnum;
+  if (selectedVerses.has(vn)) {
+    selectedVerses.delete(vn);
+    vnumEl.classList.remove('copied');
+  } else {
+    selectedVerses.add(vn);
+    vnumEl.classList.add('copied');
+  }
+  if (selectedVerses.size === 0) return;
+  const sorted = Array.from(selectedVerses).sort((a,b) => parseInt(a) - parseInt(b));
+  const text = sorted.map(vn2 => vn2 + ' ' + (CURRENT_VERSE_TEXT_MAP[vn2] || '')).join('\n');
+  copyVerseTextToClipboard(text);
+  showToast(sorted.length === 1 ? sorted[0] + '절 복사됨' : sorted.length + '개 절 복사됨');
+}
+function copyVerseTextToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(() => fallbackCopyVerseText(text));
+  } else {
+    fallbackCopyVerseText(text);
+  }
+}
+function fallbackCopyVerseText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); } catch (e) {}
+  document.body.removeChild(ta);
 }
 
 // ── 폰트 크기 조절 ──
