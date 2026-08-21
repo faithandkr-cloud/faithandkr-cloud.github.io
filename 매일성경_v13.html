@@ -722,6 +722,14 @@ main { width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
 .vnum:active { background: rgba(154,123,53,.2); }
 .vnum.copied { color: #2E8B57; background: rgba(46,139,87,.14); font-weight: 900; }
 .vtxt  { flex: 1; }
+/* ── 듀얼(한/영 병행) 본문 ── */
+.vtxt-wrap { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.vtxt-secondary { color: var(--ink-dim); font-size: .92em; line-height: 1.45; }
+.dual-unavail-note {
+  font-size: .78rem; line-height: 1.6; color: #8a5a00;
+  background: #FFF6E0; border: 1px solid #F0DA9E; border-radius: 8px;
+  padding: 8px 10px; margin-bottom: 12px;
+}
 
 /* ── 순수 제목 (주소 제거 후) ── */
 .verse-pure-title {
@@ -1410,12 +1418,12 @@ function fillBibleContentForQT(qt, bibleData, verId) {
   // "저장됨" 목록에 반드시 등록해야 다음 번 JSON 불러오기에서도 자동 채우기가 된다.
   addSavedVersionId(verId);
   buildTransSelect();
-  if (!getActiveVersion()) setActiveVersion(verId);
+  if (!getActiveVersion() && KOREAN_VERSION_IDS.includes(verId)) setActiveVersion(verId);
 }
 
 // ── 번역본별 content 가져오기 (큐티책 구분) ──
-function getVerseText(dateKey, qt) {
-  const verId = getActiveVersion();
+function getVerseText(dateKey, qt, verIdArg) {
+  const verId = verIdArg || getActiveVersion();
   qt = qt || getActiveQT();
   if (!verId) return '';
   // 큐티책별 저장된 본문
@@ -1437,6 +1445,9 @@ const VERSIONS = [
   { id:'우리말성경', label:'우리말',   icon:'📖' },
   { id:'NIV',        label:'NIV',    icon:'🇺🇸' },
 ];
+// 듀얼(한/영 병행) 보기: 한글 번역본만 전환 가능, 영어는 항상 NIV 고정
+const KOREAN_VERSION_IDS = ['개역개정', '우리말성경'];
+const ENGLISH_VERSION_ID = 'NIV';
 let loadedDBs = {}; // id → { name2num, verses }
 
 // 저장된 번역본 목록 (파일 올렸던 것들)
@@ -1466,9 +1477,11 @@ function buildTransSelect() {
 
 function toggleTrans() {
   const saved = getSavedVersionIds();
-  if (!saved.length) { showToast('먼저 설정 > 성경 데이터에서 번역본을 불러와주세요'); return; }
-  const ordered = VERSIONS.filter(v => saved.includes(v.id)).map(v => v.id);
-  if (!ordered.length) { showToast('먼저 설정 > 성경 데이터에서 번역본을 불러와주세요'); return; }
+  // 한글 성경(개역개정/우리말성경) 중에서만 전환 — 영어(NIV)는 항상 병행표시로 고정
+  const ordered = VERSIONS
+    .filter(v => KOREAN_VERSION_IDS.includes(v.id) && saved.includes(v.id))
+    .map(v => v.id);
+  if (!ordered.length) { showToast('먼저 설정 > 성경 데이터에서 개역개정 또는 우리말성경을 불러와주세요'); return; }
   const idx = ordered.indexOf(getActiveVersion());
   const next = ordered[(idx + 1) % ordered.length];
   setActiveVersion(next);
@@ -1587,7 +1600,8 @@ function fillBibleContent(verId, bibleData, progressEl, statusEl, qt) {
       if (qt==='매일성경') LS.setJson('verContent_'+verId, verContent);
       addSavedVersionId(verId);
       buildTransSelect();
-      if (!getActiveVersion()) { setActiveVersion(verId); buildTransSelect(); }
+      // 활성 번역본(한글 전환 버튼 대상)은 한글 성경일 때만 자동 지정한다.
+      if (!getActiveVersion() && KOREAN_VERSION_IDS.includes(verId)) { setActiveVersion(verId); buildTransSelect(); }
       if (statusEl) { statusEl.className='bible-ver-status ok'; statusEl.textContent=`✓ ${filled}개 본문 완료`; }
       if (labelEl) labelEl.textContent = `✓ ${filled} / ${keys.length}`;
       renderVersePanel();
@@ -1610,16 +1624,26 @@ function fillBibleContent(verId, bibleData, progressEl, statusEl, qt) {
 // getVerseText: 위에 qt 구분 버전 사용
 
 // ── 절번호 포맷 (장:절 → 절만, 번호 정렬) ──
-function formatVerseText(text) {
+// secText가 주어지면 각 절 아래에 영어(NIV) 본문을 병행 표시한다 (성경읽기_mobile의 더블 보기와 동일한 방식).
+function formatVerseText(text, secText) {
   if (!text) return '';
   selectedVerses.clear();
   CURRENT_VERSE_TEXT_MAP = {};
+  const secMap = {};
+  if (secText) {
+    secText.split('\n').filter(l => l.trim()).forEach(line => {
+      const m = line.match(/^(\d+):(\d+) (.*)$/);
+      if (m) secMap[m[1] + ':' + m[2]] = m[3];
+    });
+  }
   const lines = text.split('\n').filter(l => l.trim());
   return lines.map(line => {
     const m = line.match(/^(\d+):(\d+) (.*)$/);
     if (!m) return `<div class="vline">${line}</div>`;
     CURRENT_VERSE_TEXT_MAP[m[2]] = m[3];
-    return `<div class="vline"><span class="vnum" data-vnum="${m[2]}" onclick="toggleVerseCopy(this)">${m[2]}</span><span class="vtxt">${m[3]}</span></div>`;
+    const secT = secMap[m[1] + ':' + m[2]];
+    const secHtml = secT ? `<div class="vtxt-secondary">${secT}</div>` : '';
+    return `<div class="vline"><span class="vnum" data-vnum="${m[2]}" onclick="toggleVerseCopy(this)">${m[2]}</span><div class="vtxt-wrap"><span class="vtxt">${m[3]}</span>${secHtml}</div></div>`;
   }).join('');
 }
 
@@ -1801,6 +1825,9 @@ function renderVersePanel() {
 
   // 핵심질문 + 소제목 캐시 확인 (큐티책별 구분)
   const qt          = getActiveQT();
+  // 영어(NIV) 병행 본문 — 항상 NIV 고정, 로드되어 있으면 자동으로 함께 표시된다.
+  const engText     = getVerseText(dateKey, qt, ENGLISH_VERSION_ID);
+  const engUnavailable = !!(verseText && !engText);
   const kqKey       = 'kq_' + qt + '_' + dateKey;
   const subtitleKey = 'subtitle_' + qt + '_' + dateKey;
   const kq          = LS.getJson(kqKey, null);
@@ -1851,8 +1878,11 @@ function renderVersePanel() {
             ? `<div class="verse-pure-title">${subtitle}</div>`
             : `<div class="verse-book-title"><span class="verse-address">${addrPart}</span></div>`
         }
+        ${engUnavailable
+          ? `<div class="dual-unavail-note">⚠️ 영어(NIV) 병행 본문을 불러올 수 없어 한글만 표시됩니다.<br>설정 ⚙ → 성경 데이터에서 NIV 파일을 등록해주세요.</div>`
+          : ''}
         ${verseText
-          ? `<div class="verse-text" id="verseTextEl">${formatVerseText(verseText)}</div>`
+          ? `<div class="verse-text" id="verseTextEl">${formatVerseText(verseText, engText)}</div>`
           : `<div class="verse-empty">번역본을 선택하거나 성경 파일을 로드해주세요.</div>`}
 
         <div class="key-questions" id="kqSection">
