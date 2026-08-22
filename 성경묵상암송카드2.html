@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>암송카드 — 은혜가풍성한교회</title>
+<link rel="stylesheet" href="./common.css">
 <style>
 /* ══════════════════════════════════════
    토큰 & 리셋
@@ -67,19 +68,14 @@ header {
 }
 .home-btn:hover { background: rgba(201,168,76,.18); }
 
-/* ══════ 하단 우측 고정 홈 버튼(원형, 투명) ══════ */
+/* ══════ 하단 우측 고정 홈 버튼(원형, 투명) — 모양은 common.css .home-fab, 색만 이 테마에 맞게 재정의 ══════ */
 .home-fab {
-  position: fixed; right: 18px; bottom: 18px;
-  width: 46px; height: 46px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  position: fixed; right: 18px; bottom: 18px; z-index: 200;
   background: rgba(15,25,35,.35);
-  border: 1px solid var(--gold-dim);
-  color: var(--gold); font-size: 1.25rem;
-  cursor: pointer; z-index: 200;
-  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  transition: background .15s, border-color .15s;
+  border-color: var(--gold-dim);
+  color: var(--gold);
 }
-.home-fab:hover { background: rgba(201,168,76,.28); border-color: var(--gold); }
+.home-fab:hover, .home-fab:active { background: rgba(201,168,76,.28); border-color: var(--gold); }
 
 /* ══════════════════════════════════════
    컨트롤바 (고정)

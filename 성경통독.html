@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#101d2e">
 <title>일년일독 성경통독</title>
+<link rel="stylesheet" href="./common.css">
 <style>
 :root {
   --navy:#1b2e48; --navy-lt:#243d5e; --navy-dk:#101d2e;
@@ -64,19 +65,8 @@ header {
 }
 #hd-home-btn:hover { background: rgba(154,123,53,.32); }
 
-/* ── 하단 우측 고정 홈 버튼(원형, 투명) ── */
-.home-fab {
-  position: fixed; right: 18px; bottom: 18px;
-  width: 46px; height: 46px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(20,30,48,.35);
-  border: 1px solid rgba(154,123,53,.4);
-  color: var(--gold-lt); font-size: 1.25rem;
-  cursor: pointer; z-index: 200;
-  backdrop-filter: blur(4px);
-  transition: background .15s, border-color .15s;
-}
-.home-fab:hover { background: rgba(154,123,53,.28); border-color: var(--gold-lt); }
+/* ── 하단 우측 고정 홈 버튼(원형, 투명) — 모양은 common.css .home-fab ── */
+.home-fab { position: fixed; right: 18px; bottom: 18px; z-index: 200; }
 .hd-addr-divider {
   width: 1px; height: 16px; background: rgba(154,123,53,.3); flex-shrink: 0; margin: 0 2px;
 }

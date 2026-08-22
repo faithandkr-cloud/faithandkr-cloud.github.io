@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#101d2e">
 <title>오늘의 말씀 — 은혜가풍성한교회</title>
+<link rel="stylesheet" href="./common.css">
 <style>
 :root {
   --navy:    #1b2e48;
@@ -96,18 +97,7 @@ body {
   white-space: nowrap; flex-shrink: 0; transition: background .15s;
 }
 #home-btn:hover { background: rgba(154,123,53,.32); }
-.home-fab {
-  position: fixed; right: 18px; bottom: 18px;
-  width: 46px; height: 46px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(20,30,48,.35);
-  border: 1px solid rgba(154,123,53,.4);
-  color: var(--gold-lt); font-size: 1.25rem;
-  cursor: pointer; z-index: 200;
-  backdrop-filter: blur(4px);
-  transition: background .15s, border-color .15s;
-}
-.home-fab:hover { background: rgba(154,123,53,.28); border-color: var(--gold-lt); }
+.home-fab { position: fixed; right: 18px; bottom: 18px; z-index: 200; }
 .qt-fab { right: 72px; font-size: 1.15rem; }
 .date-line {
   display: flex;

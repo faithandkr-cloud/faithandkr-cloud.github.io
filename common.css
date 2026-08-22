@@ -1,0 +1,45 @@
+/* ══════════════════════════════════════════════════════
+   common.css — 성경 관련 앱 공통 UI 조각
+   사용처: 매일성경_v13 / 성경통독 / 성경묵상암송카드2 /
+           성경읽기_mobile / 찬송가
+
+   ※ 여기엔 "모양"(크기/색/블러/터치 반응)만 정의합니다.
+     "위치"(position/right/bottom/z-index)는 앱마다 레이아웃이
+     달라서 각 파일에 그대로 남겨두고, 이 클래스와 함께 씁니다.
+   ══════════════════════════════════════════════════════ */
+
+/* ── 홈 버튼 모양(원형, 반투명) — 어두운 배경 앱용 ──
+   매일성경_v13 / 성경통독 / 성경묵상암송카드2 에서 사용 */
+.home-fab {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(20,30,48,.35);
+  border: 1px solid rgba(154,123,53,.4);
+  color: #c9a84c; font-size: 1.25rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: background .15s ease, border-color .15s ease;
+}
+.home-fab:hover, .home-fab:active {
+  background: rgba(154,123,53,.28); border-color: #c9a84c;
+}
+
+/* ── 홈 버튼 모양(원형, 반투명) — 밝은/종이 배경 앱용 ──
+   성경읽기_mobile / 찬송가 에서 사용 */
+.home-fab-light {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(27,42,82,.18); color: rgba(27,42,82,.65);
+  box-shadow: none; backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  flex-shrink: 0; cursor: pointer; font-size: 16px;
+  transition: background .12s ease, transform .12s ease;
+}
+.home-fab-light:active { background: rgba(27,42,82,.32); transform: scale(.94); }
+
+/* ── 절/항목 사이 점선 구분선 ──
+   매일성경_v13의 본문 절 리스트(.vline)에서 사용 중인 스타일.
+   다른 파일에서 같은 패턴(절/항목별 점선 구분)이 필요해지면
+   이 클래스를 그대로 추가해서 쓰면 됩니다. */
+.dashed-divider {
+  border-bottom: 1px dashed rgba(134,102,42,.5);
+}

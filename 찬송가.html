@@ -5,6 +5,7 @@
 <meta name="color-scheme" content="light only">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>찬송가·교독문·예배자료</title>
+<link rel="stylesheet" href="./common.css">
 <style>
   :root{
     --ink:#1c242c;
@@ -40,14 +41,10 @@
   #worshipMenu .wm-item:last-child{border-bottom:none;}
 
   /* ── 본문 영역 플로팅 홈 버튼 ── */
+  /* #homeBtn 모양은 common.css .home-fab-light 사용, 위치만 이 파일에서 지정 */
   #homeBtn{
     position:absolute; right:14px; bottom:calc(18px + env(safe-area-inset-bottom, 0px)); z-index:40;
-    width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    background:rgba(27,42,82,0.18); color:rgba(27,42,82,0.65); font-size:16px;
-    box-shadow:none; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); cursor:pointer;
-    transition:background .12s ease, transform .12s ease;
   }
-  #homeBtn:active{background:rgba(27,42,82,0.32); transform:scale(0.94);}
   #worshipMenu .wm-item.disabled{color:#b7bec4;}
   #worshipMenu .wm-item.current{background:var(--gold-soft); color:var(--ink);}
   #worshipMenu .wm-badge{font-size:11px; color:#b7bec4; margin-left:6px; font-weight:400;}
@@ -178,7 +175,7 @@
     </div>
   </div>
 
-  <div id="homeBtn" onclick="goHomeApp()" title="홈">🏠</div>
+  <div class="home-fab-light" id="homeBtn" onclick="goHomeApp()" title="홈">🏠</div>
 
   <div id="content">
 

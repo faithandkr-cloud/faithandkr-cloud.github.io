@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>성경읽기</title>
+<link rel="stylesheet" href="./common.css">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700;800&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -130,11 +131,7 @@ select{font-family:inherit;}
   position:absolute; right:14px; bottom:calc(18px + var(--safe-bottom)); z-index:40;
   display:flex; align-items:center; gap:10px;
 }
-#homeBtn{
-  width:44px; height:44px; border-radius:50%; background:rgba(27,42,82,0.18); color:rgba(27,42,82,0.65);
-  box-shadow:none; backdrop-filter:blur(2px); -webkit-backdrop-filter:blur(2px); flex-shrink:0;
-}
-#homeBtn:active{background:rgba(27,42,82,0.32); transform:scale(0.94);}
+/* #homeBtn 모양은 common.css .home-fab-light 사용, 위치는 부모(#floatRightGroup)의 flex 배치를 그대로 따름 */
 
 /* ===== 본문 영역 플로팅 뒤로/앞으로 버튼 (맨 아래 왼쪽) ===== */
 #floatLeftGroup{
@@ -373,7 +370,7 @@ select{font-family:inherit;}
     </div>
     <div id="floatRightGroup">
       <button id="bookmarkBtn" title="책갈피"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 2.5c-1.1 0-2 .9-2 2v17l8-4.8 8 4.8v-17c0-1.1-.9-2-2-2H6z"/></svg></button>
-      <button class="icon-btn" id="homeBtn" title="홈">🏠</button>
+      <button class="home-fab-light" id="homeBtn" title="홈">🏠</button>
     </div>
 
     <!-- 폰트 크기 팝오버 -->
