@@ -487,31 +487,6 @@ header {
   <!-- 2줄: (삭제됨 — 하단 우측 🏠 플로팅 버튼으로 대체) -->
 </header>
 
-<!-- 낭독 플레이어 (구 1년 진행현황 자리) -->
-<div id="player-bar">
-  <div class="player-row1">
-    <button id="player-prev-btn" onclick="ttsPrevChapter()" title="이전 장">⏮</button>
-    <button id="tts-play-btn" onclick="ttsToggle()" title="낭독 시작/정지">▶</button>
-    <button id="player-next-btn" onclick="ttsNextChapter()" title="다음 장">⏭</button>
-    <span class="tts-label" id="tts-label">성경 낭독</span>
-    <button id="player-opt-btn" onclick="togglePlayerOptions()" title="재생 옵션">⋯</button>
-  </div>
-  <div class="player-row2">
-    <span class="player-time" id="player-cur-time">0:00</span>
-    <input type="range" id="player-seek" class="player-seek" min="0" max="0" value="0" step="1"
-           oninput="ttsSeekInput()" onchange="ttsSeekCommit()">
-    <span class="player-time" id="player-dur-time">0:00</span>
-  </div>
-  <div class="player-options" id="player-options">
-    <div class="tts-speed-wrap">
-      <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(0.8)">느리게</button>
-      <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(1)">보통</button>
-      <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(1.3)">빠르게</button>
-    </div>
-    <button id="tts-scroll-btn" class="on" onclick="ttsToggleScroll()">🔃 자동스크롤</button>
-  </div>
-</div>
-
 <!-- 콘텐츠 -->
 <div id="content-area">
   <div id="panel-read">
@@ -533,6 +508,31 @@ header {
       <div class="font-ctrl-group">
         <span class="font-ctrl-btn" title="본문 글자 크게" onclick="adjBtVerseFont(1)">A+</span>
         <span class="font-ctrl-btn" title="본문 글자 작게" onclick="adjBtVerseFont(-1)">A-</span>
+      </div>
+    </div>
+
+    <!-- 낭독 플레이어 (구 1년 진행현황 자리) -->
+    <div id="player-bar">
+      <div class="player-row1">
+        <button id="player-prev-btn" onclick="ttsPrevChapter()" title="이전 장">⏮</button>
+        <button id="tts-play-btn" onclick="ttsToggle()" title="낭독 시작/정지">▶</button>
+        <button id="player-next-btn" onclick="ttsNextChapter()" title="다음 장">⏭</button>
+        <span class="tts-label" id="tts-label">성경 낭독</span>
+        <button id="player-opt-btn" onclick="togglePlayerOptions()" title="재생 옵션">⋯</button>
+      </div>
+      <div class="player-row2">
+        <span class="player-time" id="player-cur-time">0:00</span>
+        <input type="range" id="player-seek" class="player-seek" min="0" max="0" value="0" step="1"
+               oninput="ttsSeekInput()" onchange="ttsSeekCommit()">
+        <span class="player-time" id="player-dur-time">0:00</span>
+      </div>
+      <div class="player-options" id="player-options">
+        <div class="tts-speed-wrap">
+          <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(0.8)">느리게</button>
+          <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(1)">보통</button>
+          <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(1.3)">빠르게</button>
+        </div>
+        <button id="tts-scroll-btn" class="on" onclick="ttsToggleScroll()">🔃 자동스크롤</button>
       </div>
     </div>
 
