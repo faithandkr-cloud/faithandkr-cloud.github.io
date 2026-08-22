@@ -85,32 +85,52 @@ header {
 .hd-ver-btns { display: none; }
 .hd-ver-btn  { display: none; }
 
-/* ── 낭독 플레이어 — 홈 버튼 바로 아래 (구 1년 진행현황 자리) ── */
-#player-bar{
-  background:rgba(0,0,0,.3);border-bottom:1px solid rgba(154,123,53,.25);
-  padding:8px 14px;flex-shrink:0;
-}
-.player-row1{display:flex;align-items:center;gap:8px;}
-.player-row1 button{
-  width:32px;height:32px;border-radius:50%;flex-shrink:0;
-  background:rgba(154,123,53,.15);border:1px solid rgba(154,123,53,.35);
-  color:var(--gold-lt);font-size:.8rem;cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;
-}
-.player-row1 button:hover{background:rgba(154,123,53,.32);}
+/* ── 낭독 재생 버튼(FAB) — 홈 버튼 옆 하단 고정 ── */
 #tts-play-btn{
-  width:36px;height:36px;
-  background:linear-gradient(135deg,var(--gold),var(--gold-lt));
-  border:none;color:var(--navy-dk);font-size:.95rem;
+  right:78px; z-index:210;
 }
 #tts-play-btn:active{transform:scale(.92);}
-#tts-play-btn.playing{background:linear-gradient(135deg,#c85a3a,#e07050);}
-.tts-label{font-size:.72rem;color:var(--gold-lt);font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#player-opt-btn{
-  margin-left:auto;background:none;border:none;color:var(--txt-dim);
-  font-size:1.1rem;font-weight:900;width:26px;height:26px;
+
+/* ── 재생 중일 때만 뜨는 정보줄 + 확장 옵션 패널 (재생 FAB 바로 위) ── */
+#player-panel{
+  position:fixed; right:18px; left:18px; bottom:78px; z-index:205;
+  display:flex; flex-direction:column; align-items:flex-end; gap:8px;
+  pointer-events:none;
 }
-.player-row2{display:flex;align-items:center;gap:8px;margin-top:6px;}
+#player-panel > *{ pointer-events:auto; }
+
+.player-now-bar{
+  display:none; align-items:center; gap:6px;
+  background:linear-gradient(135deg,var(--navy-dk),var(--navy));
+  border:1px solid rgba(154,123,53,.45);
+  border-radius:20px; padding:6px 8px 6px 12px;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+  max-width:100%;
+}
+.player-now-bar.show{ display:flex; }
+.player-now-bar button{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:rgba(154,123,53,.15);border:1px solid rgba(154,123,53,.35);
+  color:var(--gold-lt);font-size:.75rem;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;transition:background .15s;
+}
+.player-now-bar button:hover{background:rgba(154,123,53,.32);}
+.player-now-bar .tts-label{
+  font-size:.72rem;color:var(--gold-lt);font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px;
+}
+#player-opt-btn{ color:var(--txt-dim); font-weight:900; font-size:.95rem; }
+
+.player-extra{
+  display:none; flex-direction:column; gap:8px;
+  background:linear-gradient(135deg,var(--navy-dk),var(--navy));
+  border:1px solid rgba(154,123,53,.45);
+  border-radius:16px; padding:10px 12px;
+  box-shadow:0 4px 14px rgba(0,0,0,.4);
+  min-width:230px;
+}
+.player-extra.open{ display:flex; }
+.player-row2{display:flex;align-items:center;gap:8px;}
 .player-time{font-size:.62rem;color:var(--txt-dim);font-weight:700;min-width:30px;text-align:center;flex-shrink:0;}
 .player-seek{
   flex:1;-webkit-appearance:none;appearance:none;
@@ -125,8 +145,7 @@ header {
   width:13px;height:13px;border-radius:50%;border:none;
   background:var(--gold-ltr);cursor:pointer;
 }
-.player-options{display:none;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap;}
-.player-options.open{display:flex;}
+.player-options{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .tts-speed-wrap{display:flex;gap:4px;}
 .tts-speed-btn{
   background:rgba(154,123,53,.12);border:1px solid rgba(154,123,53,.28);
@@ -141,6 +160,7 @@ header {
   white-space:nowrap;transition:all .15s;
 }
 #tts-scroll-btn.on{background:rgba(74,155,111,.3);color:var(--green-lt);border-color:rgba(74,155,111,.6);}
+
 
 /* ── 캘린더·진행현황 팝업 오버레이 ── */
 #cal-overlay{
@@ -173,7 +193,14 @@ header {
 }
 
 /* ── 콘텐츠 영역 — 여백 최소화 ── */
-#content-area{flex:1;overflow-y:auto;padding:6px 0 0;}
+#content-area{flex:1;overflow-y:auto;padding:0;}
+
+/* ── 상단 고정 바(성경주소바+성경낭독바) — 헤더에 딱 붙여 고정, 본문만 그 밑으로 스크롤 ── */
+#read-topbar{
+  position: sticky; top: 0; z-index: 60;
+  background: linear-gradient(135deg, var(--navy-dk), var(--navy));
+  padding: 0 10px;
+}
 
 /* ── 날짜+이동+버전 통합 띠 ── */
 #today-card{
@@ -281,6 +308,7 @@ header {
   border-top:1px solid rgba(154,123,53,.25);
   letter-spacing:.3px;
   line-height:1;
+  scroll-margin-top: 180px; /* 상단 고정된 성경주소바+낭독바에 가리지 않도록 */
 }
 .ch-title:first-child{ border-top:none; margin-top:0; }
 .verse-row{
@@ -482,6 +510,9 @@ header {
 <div id="content-area">
   <div id="panel-read">
 
+    <!-- 상단 고정 영역: 성경주소바 + 성경낭독바 (헤더 아래 고정, 본문만 스크롤) -->
+    <div id="read-topbar">
+
     <!-- 날짜 + 이동 + 버전 통합 띠 -->
     <div id="today-card">
       <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">◀</button>
@@ -502,30 +533,7 @@ header {
       </div>
     </div>
 
-    <!-- 낭독 플레이어 (구 1년 진행현황 자리) -->
-    <div id="player-bar">
-      <div class="player-row1">
-        <button id="player-prev-btn" onclick="ttsPrevChapter()" title="이전 장">⏮</button>
-        <button id="tts-play-btn" onclick="ttsToggle()" title="낭독 시작/정지">▶</button>
-        <button id="player-next-btn" onclick="ttsNextChapter()" title="다음 장">⏭</button>
-        <span class="tts-label" id="tts-label">성경 낭독</span>
-        <button id="player-opt-btn" onclick="togglePlayerOptions()" title="재생 옵션">⋯</button>
-      </div>
-      <div class="player-row2">
-        <span class="player-time" id="player-cur-time">0:00</span>
-        <input type="range" id="player-seek" class="player-seek" min="0" max="0" value="0" step="1"
-               oninput="ttsSeekInput()" onchange="ttsSeekCommit()">
-        <span class="player-time" id="player-dur-time">0:00</span>
-      </div>
-      <div class="player-options" id="player-options">
-        <div class="tts-speed-wrap">
-          <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(0.8)">느리게</button>
-          <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(1)">보통</button>
-          <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(1.3)">빠르게</button>
-        </div>
-        <button id="tts-scroll-btn" class="on" onclick="ttsToggleScroll()">🔃 자동스크롤</button>
-      </div>
-    </div>
+    </div><!-- /read-topbar -->
 
     <!-- 읽었습니다 버튼 (숨김) -->
     <button id="check-btn" onclick="toggleCheck()">
@@ -1638,6 +1646,8 @@ function ttsPlay() {
   ttsPlaying = true;
   const btn = document.getElementById('tts-play-btn');
   if (btn) { btn.textContent = '⏸'; btn.classList.add('playing'); }
+  const nowBar = document.getElementById('player-now-bar');
+  if (nowBar) nowBar.classList.add('show');
   // 일시정지 상태였다면 처음부터 다시 받아오지 않고 이어서 재생
   if (ttsAudio && ttsAudio.src) {
     ttsHighlightChapter(ttsCurIdx);
@@ -1666,6 +1676,10 @@ function ttsDone() {
   document.querySelectorAll('#verse-content .ch-title.tts-active')
     .forEach(el => el.classList.remove('tts-active'));
   _resetPlayerSeek();
+  const nowBar = document.getElementById('player-now-bar');
+  if (nowBar) setTimeout(() => nowBar.classList.remove('show'), 1500);
+  const extra = document.getElementById('player-extra');
+  if (extra) extra.classList.remove('open');
 }
 
 // 이전/다음 장으로 이동 (재생 중이면 바로 이어서 재생, 멈춘 상태면 위치만 이동)
@@ -1723,9 +1737,9 @@ function ttsToggleScroll() {
   btn.textContent = ttsAutoScroll ? '🔃 자동스크롤' : '↕ 수동스크롤';
 }
 
-// 재생 옵션(속도·자동스크롤) 펼침/접힘
+// 재생 옵션(탐색바·속도·자동스크롤) 펼침/접힘
 function togglePlayerOptions() {
-  const el = document.getElementById('player-options');
+  const el = document.getElementById('player-extra');
   if (el) el.classList.toggle('open');
 }
 
@@ -1738,6 +1752,10 @@ const _patchTts = () => {
   const lbl = document.getElementById('tts-label');
   if (lbl) lbl.textContent = '성경 낭독';
   _resetPlayerSeek();
+  const nowBar = document.getElementById('player-now-bar');
+  if (nowBar) nowBar.classList.remove('show');
+  const extra = document.getElementById('player-extra');
+  if (extra) extra.classList.remove('open');
 };
 /* ── 초기화 ── */
 load();
@@ -1751,5 +1769,36 @@ restoreAudioZip();
 applyBtVerseFont();
 </script>
 <button class="home-fab" onclick="goHome()" title="홈으로">🏠</button>
+
+<!-- 낭독 재생 FAB + 정보줄/옵션 패널 (홈 버튼 옆, 하단 고정) -->
+<button class="home-fab" id="tts-play-btn" onclick="ttsToggle()" title="낭독 시작/정지">▶</button>
+
+<div id="player-panel">
+  <!-- 확장 옵션: 탐색바 + 속도 + 자동스크롤 ("..." 버튼으로 열림) -->
+  <div class="player-extra" id="player-extra">
+    <div class="player-row2">
+      <span class="player-time" id="player-cur-time">0:00</span>
+      <input type="range" id="player-seek" class="player-seek" min="0" max="0" value="0" step="1"
+             oninput="ttsSeekInput()" onchange="ttsSeekCommit()">
+      <span class="player-time" id="player-dur-time">0:00</span>
+    </div>
+    <div class="player-options" id="player-options">
+      <div class="tts-speed-wrap">
+        <button class="tts-speed-btn" data-rate="0.8" onclick="ttsSetRate(0.8)">느리게</button>
+        <button class="tts-speed-btn active" data-rate="1" onclick="ttsSetRate(1)">보통</button>
+        <button class="tts-speed-btn" data-rate="1.3" onclick="ttsSetRate(1.3)">빠르게</button>
+      </div>
+      <button id="tts-scroll-btn" class="on" onclick="ttsToggleScroll()">🔃 자동스크롤</button>
+    </div>
+  </div>
+
+  <!-- 현재 재생 중인 줄: 재생 중일 때만 표시 -->
+  <div class="player-now-bar" id="player-now-bar">
+    <button id="player-prev-btn" onclick="ttsPrevChapter()" title="이전 장">⏮</button>
+    <span class="tts-label" id="tts-label">성경 낭독</span>
+    <button id="player-next-btn" onclick="ttsNextChapter()" title="다음 장">⏭</button>
+    <button id="player-opt-btn" onclick="togglePlayerOptions()" title="재생 옵션">⋯</button>
+  </div>
+</div>
 </body>
 </html>
